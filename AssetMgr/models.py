@@ -5,7 +5,7 @@ class Pellet(models.Model):
     column = models.CharField(max_length=8)
     row = models.CharField(max_length=8)
     pellet_name = models.CharField(max_length=32)
-    pellet_desc = models.CharField(max_length=100, null=True)
+    pellet_desc = models.CharField(max_length=200, null=True)
     source = models.CharField(max_length = 50, null = True)
     destination = models.CharField(max_length = 50, null = True)
     class Meta:
@@ -22,7 +22,7 @@ class Cargo(models.Model):
     origin = models.CharField(max_length = 50, null = True)
     due_outbound_date = models.DateField(null = True)
     name = models.CharField(max_length = 32)
-    desc = models.CharField(max_length = 100, null=True)
+    desc = models.CharField(max_length = 200, null=True)
     weight = models.DecimalField(max_digits=4, decimal_places=2)
     category = models.ForeignKey('Products', on_delete = models.SET_NULL, null=True)
     def __str__(self):
