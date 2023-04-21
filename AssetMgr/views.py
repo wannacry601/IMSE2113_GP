@@ -3,8 +3,33 @@ from rest_framework import viewsets, permissions
 from .serializers import *
 from . import models
 
+# the Django web application views
 home = lambda request: render(request, 'blank.html')
 
+def how(request):
+    return render(request, "how.html")
+
+def about(request):
+    return render(request, 'about.html')
+
+def login(request):
+    return render(request, 'login.html')
+
+def logout(request):
+    pass
+
+def disable(request):
+    pass
+
+def changeUser(request):
+    pass
+
+def addUser(request):
+    pass
+
+# end of Django web application views
+
+# start of Django rest framework views
 class Userviewset(viewsets.ModelViewSet):
     queryset = User.objects.all()
     serializer_class = UserSerializer
@@ -39,3 +64,5 @@ class PelletViewset(viewsets.ModelViewSet):
     queryset = Pellet.objects.all()
     serializer_class = PelletSerializer
     permission_classes = [permissions.IsAuthenticated]
+
+# end of Django rest framework views
