@@ -1,19 +1,22 @@
 from django.shortcuts import render
 from rest_framework import viewsets, permissions
 from .serializers import *
-from . import models
+from . import models, forms
 
 # the Django web application views
 home = lambda request: render(request, 'blank.html')
 
 def how(request):
-    return render(request, "how.html")
+    return render(request, "how.html", {"is_admin": False})
 
 def about(request):
-    return render(request, 'about.html')
+    return render(request, 'about.html', {"is_admin": False})
 
 def login(request):
-    return render(request, 'login.html')
+    if request.method == "POST":
+        request.POST
+    else:
+        return render(request, 'login.html')
 
 def logout(request):
     pass
@@ -25,6 +28,7 @@ def changeUser(request):
     pass
 
 def addUser(request):
+    return render(request, "add_user.html")
     pass
 
 # end of Django web application views
