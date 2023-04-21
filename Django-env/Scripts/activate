@@ -38,7 +38,7 @@ deactivate () {
 # unset irrelevant variables
 deactivate nondestructive
 
-VIRTUAL_ENV="C:\Users\HP\PycharmProjects\Django_GP\Django-env"
+VIRTUAL_ENV="D:\Django_GP\Django_GP\Django-env"
 export VIRTUAL_ENV
 
 _OLD_VIRTUAL_PATH="$PATH"
