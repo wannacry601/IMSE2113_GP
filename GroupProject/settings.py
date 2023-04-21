@@ -38,8 +38,8 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'AssetMgr',
-    'api',
-
+    'rest_framework',
+    'drf_generators'
 ]
 
 MIDDLEWARE = [
