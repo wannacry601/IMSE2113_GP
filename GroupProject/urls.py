@@ -19,6 +19,6 @@ from AssetMgr.views import *
 
 urlpatterns = [
     path('', include('AssetMgr.urls')),
-    # path('api-auth/', include('rest_framework.urls', namespace='rest_framework'))
+    path('api-auth/', include('rest_framework.urls', namespace='rest_framework'))
 ]
 
