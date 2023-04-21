@@ -1,7 +1,8 @@
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from rest_framework import viewsets, permissions
 from .serializers import *
 from . import models, forms
+from django.contrib.auth import login, logout
 
 # the Django web application views
 home = lambda request: render(request, 'blank.html')
@@ -15,11 +16,18 @@ def about(request):
 def login(request):
     if request.method == "POST":
         request.POST
+        request.session.set_expiry(3600)
     else:
         return render(request, 'login.html')
 
 def logout(request):
-    pass
+    if request.method == "POST":
+        user = request.user
+        if user.is_authenticated:
+            logout(user)
+            return redirect(home)
+    else:
+        pass
 
 def disable(request):
     
