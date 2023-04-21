@@ -15,6 +15,7 @@ class Pellet(models.Model):
               (f"Outbound {self.id} ({self.pellet_name}) fulfilling {self.outbound_shipment} for destination {self.destination} is stored at column {self.column} row {self.row}. Its contents are", self.pellet_desc if self.pellet_desc else "not defined")+ "."
 
 class Cargo(models.Model):
+    is_in_warehouse = models.BooleanField(default=True)
     on_pellet = models.ForeignKey('Pellet', on_delete = models.SET_NULL,  null=True)
     destination = models.CharField(max_length = 50, null = True)
     arrival_date = models.DateField()
