@@ -3,8 +3,6 @@ from rest_framework import serializers
 from .models import *
 
 class PelletSerializer(serializers.HyperlinkedModelSerializer):
-    inbound_shipment = serializers.PrimaryKeyRelatedField(queryset=Inbound.objects.all())
-    outbound_shipment = serializers.PrimaryKeyRelatedField(queryset=Outbound.objects.all(), required=False, allow_null=True)
 
     class Meta:
         model = Pellet
@@ -19,9 +17,7 @@ class PelletSerializer(serializers.HyperlinkedModelSerializer):
         instance.row = validated_data.get('row', instance.row)
         instance.pellet_name = validated_data.get('pellet_name', instance.pellet_name)
         instance.pellet_desc = validated_data.get('pellet_desc', instance.pellet_desc)
-        instance.inbound_shipment = validated_data.get('inbound_shipment', instance.inbound_shipment)
         instance.source = validated_data.get('source', instance.source)
-        instance.outbound_shipment = validated_data.get('outbound_shipment', instance.outbound_shipment)
         instance.destination = validated_data.get('destination', instance.destination)
         instance.save()
         return instance
@@ -41,42 +37,13 @@ class CargoSerializer(serializers.HyperlinkedModelSerializer):
     def update(self, instance, validated_data):
         instance.on_pellet = validated_data.get('on_pellet', instance.on_pellet)
         instance.destination = validated_data.get('destination', instance.destination)
+        instance.arrival_date = validated_data.get('arrival_date', instance.arrival_date)
+        instance.origin = validated_data.get('origin', instance.origin)
+        instance.due_outbound_date = validated_data.get('due_outbound_date', instance.due_outbound_date)
         instance.name = validated_data.get('name', instance.name)
         instance.desc = validated_data.get('desc', instance.desc)
         instance.weight = validated_data.get('weight', instance.weight)
-        instance.barcode = validated_data.get('barcode', instance.barcode)
         instance.category = validated_data.get('category', instance.category)
-        instance.save()
-        return instance
-
-
-class InboundSerializer(serializers.HyperlinkedModelSerializer):
-    class Meta:
-        model = Inbound
-        fields = '__all__'
-
-    def create(self, validated_data):
-        return Inbound.objects.create(**validated_data)
-
-    def update(self, instance, validated_data):
-        instance.shipment_date = validated_data.get('shipment_date', instance.shipment_date)
-        instance.desc = validated_data.get('desc', instance.desc)
-        instance.save()
-        return instance
-
-
-class OutboundSerializer(serializers.HyperlinkedModelSerializer):
-    class Meta:
-        model = Outbound
-        fields = '__all__'
-
-    def create(self, validated_data):
-        return Outbound.objects.create(**validated_data)
-
-    def update(self, instance, validated_data):
-        instance.shipment_date = validated_data.get('shipment_date', instance.shipment_date)
-        instance.desc = validated_data.get('desc', instance.desc)
-        instance.dest = validated_data.get('dest', instance.dest)
         instance.save()
         return instance
 
