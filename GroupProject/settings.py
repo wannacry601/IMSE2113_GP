@@ -39,7 +39,6 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'AssetMgr',
     'rest_framework',
-    'drf_generators'
 ]
 
 MIDDLEWARE = [
