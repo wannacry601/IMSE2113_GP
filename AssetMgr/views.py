@@ -1,8 +1,13 @@
 from django.shortcuts import render, redirect
+from django.utils.timezone import datetime
+from django.http import HttpResponse
 from rest_framework import viewsets, permissions
 from .serializers import *
 from . import models, forms
-from django.contrib.auth import login, logout
+from django.contrib.auth import login, logout, authenticate
+from django.contrib.auth.models import User
+import pandas
+
 
 # the Django web application views
 home = lambda request: render(request, 'blank.html')
@@ -15,10 +20,31 @@ def about(request):
 
 def login(request):
     if request.method == "POST":
-        request.POST
-        request.session.set_expiry(3600)
+        user = request.user
+        if user.is_authenticated:
+            return redirect(home)
+        else:
+            try:
+                username = request.POST['username']
+                password = request.POST['password']
+            except KeyError:
+                return render(request, 'login.html', {'error': True})
+            user = authenticate(username=username, password=password)
+            if user is not None:
+                login(request, user)
+                request.session.set_expiry(3600)
+                try:
+                    referer = request.META['HTTP_REFERER']
+                except KeyError:
+                    referer = None
+                print(referer) # TODO
+                if referer:
+                    return redirect(referer)
+            else:
+                return render(request, 'login.html', {'error': True})
+
     else:
-        return render(request, 'login.html')
+        return render(request, 'login.html', {'error': False})
 
 def logout(request):
     if request.method == "POST":
@@ -38,6 +64,28 @@ def changeUser(request):
 
 def addUser(request):
     return render(request, "add_user.html")
+    pass
+
+def search(request):
+    try:
+        search_type = request.GET['type']
+    except KeyError:
+        search_type = 'cargo'
+    if search_type == 'cargo':
+        pass
+        models.Cargo
+
+def inventoryReport(request):
+    cargo_set = models.Cargo.objects.all()
+    if request.method == "POST":
+        filename = str(datetime.now()).replace(" ", "_")
+        df = pandas.DataFrame.from_records(cargo_set.values())
+        response = HttpResponse(df.to_csv())
+        response.headers['Content-Disposition'] = f'attachment; filename="{filename}"'
+    else:
+        pass
+
+def userReport(request):
     pass
 
 # end of Django web application views
