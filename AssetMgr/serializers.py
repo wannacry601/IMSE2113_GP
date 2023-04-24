@@ -1,5 +1,6 @@
 from django.contrib.auth.models import User, Group
 from rest_framework import serializers 
+from django.contrib.auth import authenticate, get_user_model
 from .models import *
 
 class PelletSerializer(serializers.HyperlinkedModelSerializer):
@@ -87,11 +88,35 @@ class ProductsSerializer(serializers.HyperlinkedModelSerializer):
 class UserSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
         model = User
-        fields = ['id', 'url', 'username', 'email', 'groups', 'first_name', 'last_name', 'is_staff']
+        fields = ['id', 'url', 'username', 'password', 'email', 'groups', 'first_name', 'last_name', 'is_staff']
+    def create(data):
+        return User.objects.create(**data)
     def update(self, instance, data):
         instance.email = data.get('email', instance.email)
         instance.username = data.get('username', instance.username)
+        instance.password = data.get('password', instance.password)
         instance.id = data.get('id', instance.id)
         instance.first_name = data.get('first_name', instance.first_name)
         instance.last_name = data.get('first_name', instance.first_name )
+    def validate(self, attribs):
+        username, password = map(attribs.get, ['username', 'password'])
+        userauth = authenticate(self.context.get('request'), username = username, password = password)
+        if not userauth or not (username and password): raise serializers.ValidationError('Bad credentials', code = '403')
+        attribs['user'] = userauth
+        return attribs
 
+
+class LoginSerializer(serializers.Serializer):
+    username = serializers.CharField(max_length=255)
+    password = serializers.CharField(
+        style={'input_type': 'password'},
+        trim_whitespace=True,
+        max_length=128,
+        write_only=True
+    )
+    def validate(self, attribs):
+        username, password = map(attribs.get, ['username', 'password'])
+        userauth = authenticate(self.context.get('request'), username = username, password = password)
+        if not userauth or not (username and password): raise serializers.ValidationError('Bad credentials', code = '403')
+        attribs['user'] = userauth
+        return attribs
