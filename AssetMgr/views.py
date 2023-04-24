@@ -35,7 +35,7 @@ class LoginViewset(views.APIView):
         serializer.is_valid(raise_exception=True)
         user = serializer.validated_data['user']
         login(request, user)
-        return Response({'message': 'successfully logged in', 'user': user, 'auth': True}, status=202)
+        return Response({'message': 'successfully logged in', 'auth': True}, status=202)
 
 class LogoutViewset(views.APIView):
     permission_classes = (permissions.AllowAny,)
