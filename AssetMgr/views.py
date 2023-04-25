@@ -81,6 +81,7 @@ def inventoryReport(request):
         filename = str(datetime.now()).replace(" ", "_")
         df = pandas.DataFrame.from_records(cargo_set.values())
         response = HttpResponse(df.to_csv())
+        response.headers['Content-Type'] = 'application/csv'
         response.headers['Content-Disposition'] = f'attachment; filename="{filename}"'
     else:
         pass
