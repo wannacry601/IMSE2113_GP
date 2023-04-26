@@ -7,7 +7,7 @@ class Pellet(models.Model):
     pellet_name = models.CharField(max_length=32)
     pellet_desc = models.CharField(max_length=200, null=True)
     inbound_shipment = models.DateField()
-    outbound_shipment = models.DateField()
+    outbound_shipment = models.DateField(null = True)
     source = models.CharField(max_length = 50, null = True)
     destination = models.CharField(max_length = 50, null = True)
     class Meta:
