@@ -30,10 +30,35 @@ def about(request):
 
 def app_login(request):
     if request.method == "POST":
-        request.POST
-        request.session.set_expiry(3600)
+        user = request.user
+        if user.is_authenticated:
+            return redirect(home)
+        else:
+            try:
+                username = request.POST['username']
+                password = request.POST['password']
+            except KeyError:
+                return render(request, 'login.html', {'error': True})
+            user = authenticate(username=username, password=password)
+            if user is not None:
+                login(request, user)
+                request.session.set_expiry(3600)
+                try:
+                    referer = request.META['HTTP_REFERER']
+                except KeyError:
+                    referer = None
+                print(referer) # TODO
+                if referer:
+                    return redirect(referer)
+            else:
+                return render(request, 'login.html', {'error': True})
     else:
-        return render(request, 'login.html')
+        return render(request, 'login.html', {'error': False})
+
+
+
+
+
 
 def app_logout(request):
     if request.method == "POST":
