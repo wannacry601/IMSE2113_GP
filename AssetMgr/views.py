@@ -3,13 +3,16 @@ from rest_framework import viewsets, permissions
 from inspect import isclass
 from django.shortcuts import render
 from django.apps import apps
+from django.http import HttpResponse, HttpResponseRedirect
 from django.contrib.auth import login, logout
 from rest_framework import viewsets, permissions, views, mixins
 from rest_framework.response import Response
 from rest_framework.renderers import JSONRenderer
+from django.utils.timezone import datetime
 from .serializers import *
 from . import models, forms
 from django.contrib.auth import login, logout
+import pandas
 
 # the Django web application views
 DEBUG = (permissions.AllowAny)
@@ -19,7 +22,7 @@ debug = True #Turn false when in production
 home = lambda request: render(request, 'blank.html')
 
 def index(request):
-    return render(request, "index.html", {"is_admin": False})
+    return render(request, "home.html", {"is_admin": False})
 
 
 def how(request):
@@ -57,17 +60,23 @@ def app_login(request):
 
 
 
-
-
-
 def app_logout(request):
     if request.method == "POST":
         user = request.user
         if user.is_authenticated:
             logout(user)
             return redirect(home)
+        else:
+            try:
+                referer = request.META['HTTP_REFERER']
+            except KeyError:
+                referer = None
+            if referer:
+                return HttpResponseRedirect(referer)
+            else:
+                return HttpResponseRedirect('about/')
     else:
-        pass
+        return redirect(home)
 
 
 def changeUser(request):
@@ -80,6 +89,40 @@ def addCargo(request):
     pass
 
 def changeCargo(request):
+    pass
+
+def search(request):
+    try:
+        query_string = request.GET['query_string']
+    except KeyError:
+        query_string = ''
+
+    # try:
+    #     search_type = request.GET['type']
+    # except KeyError:
+    #     search_type = 'name'
+    search_type = 'name'
+    query_string = query_string.strip()
+    query_string = '.*' + query_string + '.*'
+    if query_string == '':
+        return render(request, 'search.html', {"queryset": None})
+
+    if search_type == 'name':
+        queryset = models.Cargo.objects.filter(name__regex=query_string)
+        return render(request, 'search.html', {"queryset": queryset})
+
+def inventoryReport(request):
+    cargo_set = models.Cargo.objects.all()
+    if request.method == "POST":
+        filename = str(datetime.now()).replace(" ", "_")
+        df = pandas.DataFrame.from_records(cargo_set.values())
+        response = HttpResponse(df.to_csv())
+        response.headers['Content-Type'] = 'application/csv'
+        response.headers['Content-Disposition'] = f'attachment; filename="{filename}"'
+    else:
+        pass
+
+def userReport(request):
     pass
 
 

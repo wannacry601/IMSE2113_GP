@@ -16,14 +16,14 @@ router.register('pellet', PelletViewset)
 
 
 urlpatterns = [
-    path('', home, name='index'),
+    path('', home, name='home'),
     path('api/', include(router.urls)),
     path('api/login', LoginViewset.as_view()),
     path('api/logout', LogoutViewset.as_view()),
     path('api/checkauth', CheckAuth.as_view()),
     path('api/everything', AllDataViewSet.as_view({'get':'list'})),
     path('api-auth/', include('rest_framework.urls', namespace='rest_framework')),
-    path('index/', views.index, name='index'),
+    path('home/', views.index, name='index'),
     path('how/', views.how, name='how'),
     path('about/', views.about, name='about'),
     path('login/', views.app_login, name='login'),
