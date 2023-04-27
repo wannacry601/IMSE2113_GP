@@ -24,14 +24,14 @@ def how(request):
 def about(request):
     return render(request, 'about.html', {"is_admin": False})
 
-def login(request):
+def app_login(request):
     if request.method == "POST":
         request.POST
         request.session.set_expiry(3600)
     else:
         return render(request, 'login.html')
 
-def logout(request):
+def app_logout(request):
     if request.method == "POST":
         user = request.user
         if user.is_authenticated:
