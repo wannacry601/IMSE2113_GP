@@ -8,6 +8,9 @@ from rest_framework.renderers import JSONRenderer
 from .serializers import *
 from . import models
 
+DEBUG = (permissions.AllowAny)
+debug = True #Turn false when in production
+
 
 home = lambda request: render(request, 'blank.html')
 
@@ -55,7 +58,7 @@ class CheckAuth(views.APIView):
 
 
 class AllDataViewSet(mixins.ListModelMixin, viewsets.GenericViewSet):
-    permission_classes = (permissions.AllowAny,)
+    permission_classes = DEBUG if debug else (permissions.IsAuthenticated)
     def list(self, request, *args, **kwargs):
         data = {}
 
