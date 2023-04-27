@@ -17,17 +17,7 @@ from django.urls import include, path
 from rest_framework import routers
 from AssetMgr.views import *
 
-router = routers.DefaultRouter()
-router.register('users', Userviewset)
-router.register('cargo', CargoViewset)
-router.register('inbound', InboundViewset)
-router.register('outbound', OutboundViewset)
-router.register('order', OrderViewset)
-router.register('products', ProductsViewset)
-router.register('pellet', PelletViewset)
-
 urlpatterns = [
-    path('api/', include(router.urls)),
     path('', include('AssetMgr.urls')),
     path('api-auth/', include('rest_framework.urls', namespace='rest_framework'))
 ]

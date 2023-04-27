@@ -1,21 +1,35 @@
 <!DOCTYPE html>
 <html>
 <head>
-	<title>Go to ~/api/</title>
+	<title>UI not implemented</title>
 </head>
 <body>
-	<h1>Go to ~/api/</h1>
+	<h1>UI not implemented</h1>
+	<p>You are seeing this because there is no UI yet, or you have chosen to see the documentation for the API.</p>
+	<h2>Model APIs</h2>
 	<p>This serves as documentation for the REST API.</p>
 	<p>You are seeing this because the GUI for the REST API implementation is at the directory ~/api/. For each category, the API takes a JSON input, and spits out a JSON response. There are the following categories:</p>
 	<ul>
 		<li><a href="/api/pellet/">Pellet</a></li>
 		<li><a href="/api/cargo/">Cargo</a></li>
-		<li><a href="/api/inbound/">Inbound</a></li>
-		<li><a href="/api/outbound/">Outbound</a></li>
 		<li><a href="/api/order/">Order</a></li>
 		<li><a href="/api/products/">Products</a></li>
 	</ul>
 	<p>To access the API, please visit ~/api/category/. Alternatively, <a href="/api/">click here</a> to access the root or the above categories to jump to ~/api/category/.</p>
 	<p>If you need new classes or have any questions, please raise them in the group or DM me.</p>
-</body>
+
+	<h2>Non-Model APIs</h2>
+	<p>You will have to install httpie with `pip install httpie --no-user`.</p>
+
+	<p>Test the login API with `http POST :8000/api/login/ username=myuser password=mysecret` while the server is running.</p>
+	<p>The expected behaviour for a successful login is returning a HTTP code of 202 Accepted.</p>
+	<p>An unsuccessful one will raise ValidationError with context 'Bad Credentials' and HTTP code 400 Bad Request.</p>
+
+	<p>The logout API is tested by `http POST :8000/api/logout` and it will return a message "logged out".</p>
+	
+	<p>To check if the current user is logged in, call `http GET :8000/api/checkauth`</p>
+
+	<p>You may check any error pages by running `command > file` and then opening said file.</p> 
+
+	</body>
 </html>

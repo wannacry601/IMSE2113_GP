@@ -1,10 +1,9 @@
 from django.contrib.auth.models import User, Group
 from rest_framework import serializers 
+from django.contrib.auth import authenticate, get_user_model
 from .models import *
 
 class PelletSerializer(serializers.HyperlinkedModelSerializer):
-    inbound_shipment = serializers.PrimaryKeyRelatedField(queryset=Inbound.objects.all())
-    outbound_shipment = serializers.PrimaryKeyRelatedField(queryset=Outbound.objects.all(), required=False, allow_null=True)
 
     class Meta:
         model = Pellet
@@ -19,9 +18,7 @@ class PelletSerializer(serializers.HyperlinkedModelSerializer):
         instance.row = validated_data.get('row', instance.row)
         instance.pellet_name = validated_data.get('pellet_name', instance.pellet_name)
         instance.pellet_desc = validated_data.get('pellet_desc', instance.pellet_desc)
-        instance.inbound_shipment = validated_data.get('inbound_shipment', instance.inbound_shipment)
         instance.source = validated_data.get('source', instance.source)
-        instance.outbound_shipment = validated_data.get('outbound_shipment', instance.outbound_shipment)
         instance.destination = validated_data.get('destination', instance.destination)
         instance.save()
         return instance
@@ -41,42 +38,13 @@ class CargoSerializer(serializers.HyperlinkedModelSerializer):
     def update(self, instance, validated_data):
         instance.on_pellet = validated_data.get('on_pellet', instance.on_pellet)
         instance.destination = validated_data.get('destination', instance.destination)
+        instance.arrival_date = validated_data.get('arrival_date', instance.arrival_date)
+        instance.origin = validated_data.get('origin', instance.origin)
+        instance.due_outbound_date = validated_data.get('due_outbound_date', instance.due_outbound_date)
         instance.name = validated_data.get('name', instance.name)
         instance.desc = validated_data.get('desc', instance.desc)
         instance.weight = validated_data.get('weight', instance.weight)
-        instance.barcode = validated_data.get('barcode', instance.barcode)
         instance.category = validated_data.get('category', instance.category)
-        instance.save()
-        return instance
-
-
-class InboundSerializer(serializers.HyperlinkedModelSerializer):
-    class Meta:
-        model = Inbound
-        fields = '__all__'
-
-    def create(self, validated_data):
-        return Inbound.objects.create(**validated_data)
-
-    def update(self, instance, validated_data):
-        instance.shipment_date = validated_data.get('shipment_date', instance.shipment_date)
-        instance.desc = validated_data.get('desc', instance.desc)
-        instance.save()
-        return instance
-
-
-class OutboundSerializer(serializers.HyperlinkedModelSerializer):
-    class Meta:
-        model = Outbound
-        fields = '__all__'
-
-    def create(self, validated_data):
-        return Outbound.objects.create(**validated_data)
-
-    def update(self, instance, validated_data):
-        instance.shipment_date = validated_data.get('shipment_date', instance.shipment_date)
-        instance.desc = validated_data.get('desc', instance.desc)
-        instance.dest = validated_data.get('dest', instance.dest)
         instance.save()
         return instance
 
@@ -120,11 +88,35 @@ class ProductsSerializer(serializers.HyperlinkedModelSerializer):
 class UserSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
         model = User
-        fields = ['id', 'url', 'username', 'email', 'groups', 'first_name', 'last_name', 'is_staff']
+        fields = ['id', 'url', 'username', 'password', 'email', 'groups', 'first_name', 'last_name', 'is_staff']
+    def create(data):
+        return User.objects.create(**data)
     def update(self, instance, data):
         instance.email = data.get('email', instance.email)
         instance.username = data.get('username', instance.username)
+        instance.password = data.get('password', instance.password)
         instance.id = data.get('id', instance.id)
         instance.first_name = data.get('first_name', instance.first_name)
         instance.last_name = data.get('first_name', instance.first_name )
+    def validate(self, attribs):
+        username, password = map(attribs.get, ['username', 'password'])
+        userauth = authenticate(self.context.get('request'), username = username, password = password)
+        if not userauth or not (username and password): raise serializers.ValidationError('Bad credentials', code = '403')
+        attribs['user'] = userauth
+        return attribs
 
+
+class LoginSerializer(serializers.Serializer):
+    username = serializers.CharField(max_length=255)
+    password = serializers.CharField(
+        style={'input_type': 'password'},
+        trim_whitespace=True,
+        max_length=128,
+        write_only=True
+    )
+    def validate(self, attribs):
+        username, password = map(attribs.get, ['username', 'password'])
+        userauth = authenticate(self.context.get('request'), username = username, password = password)
+        if not userauth or not (username and password): raise serializers.ValidationError('Bad credentials', code = '403')
+        attribs['user'] = userauth
+        return attribs
