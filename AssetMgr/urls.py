@@ -1,4 +1,5 @@
 from django.urls import include, path
+from django.contrib import admin
 from django.contrib.staticfiles.urls import staticfiles_urlpatterns
 from rest_framework import routers
 from .views import *
@@ -26,8 +27,8 @@ urlpatterns = [
     path('home/', views.index, name='index'),
     path('how/', views.how, name='how'),
     path('about/', views.about, name='about'),
-    path('login/', views.app_login, name='login'),
-    path('logout/', views.app_logout, name='logout'), 
+    path('login/', views.app_login, name='login_'),
+    path('logout/', views.app_logout, name='logout_'), 
     # path('disable/', views.disable, name='disable'),
     path('changeUser/', views.changeUser, name='changeUser'),
     path('addUser/', views.addUser, name='addUser'),

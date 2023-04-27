@@ -22,26 +22,44 @@ debug = True #Turn false when in production
 home = lambda request: render(request, 'blank.html')
 
 def index(request):
-    return render(request, "home.html", {"is_admin": False})
-
+    user = request.user
+    if user.is_authenticated:
+        if user.is_superuser:
+            return render(request, "home.html", {"is_admin": True})
+        return render(request, "home.html", {"is_admin": False})
+    else:
+        return redirect(app_login)
 
 def how(request):
-    return render(request, "how.html", {"is_admin": False})
+    user = request.user
+    if user.is_authenticated:
+        if user.is_superuser:
+            return render(request, "how.html", {"is_admin": True})
+        return render(request, "how.html", {"is_admin": False})
+    else:
+        return redirect(app_login)
 
 def about(request):
-    return render(request, 'about.html', {"is_admin": False})
-
+    user = request.user
+    if user.is_authenticated:
+        if user.is_superuser:
+            return render(request, "about.html", {"is_admin": True})
+        return render(request, "about.html", {"is_admin": False})
+    else:
+        return redirect(app_login)
+    
 def app_login(request):
+    empty_form = forms.LoginForm()
     if request.method == "POST":
         user = request.user
         if user.is_authenticated:
-            return redirect(home)
+            return redirect(index)
         else:
             try:
                 username = request.POST['username']
                 password = request.POST['password']
             except KeyError:
-                return render(request, 'login.html', {'error': True})
+                return render(request, 'login.html', {'error': True, 'form': empty_form})
             user = authenticate(username=username, password=password)
             if user is not None:
                 login(request, user)
@@ -50,13 +68,14 @@ def app_login(request):
                     referer = request.META['HTTP_REFERER']
                 except KeyError:
                     referer = None
-                print(referer) # TODO
                 if referer:
                     return redirect(referer)
+                else: 
+                    return redirect(home)
             else:
                 return render(request, 'login.html', {'error': True})
     else:
-        return render(request, 'login.html', {'error': False})
+        return render(request, 'login.html', {'error': False, 'form': empty_form})
 
 
 
