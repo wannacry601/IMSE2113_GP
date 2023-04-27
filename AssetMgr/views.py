@@ -40,16 +40,15 @@ def app_logout(request):
     else:
         pass
 
-def disable(request):
-    
-    pass
 
 def changeUser(request):
     pass
 
 def addUser(request):
     return render(request, "add_user.html")
-    pass
+    
+
+
 
 # end of Django web application views
 
