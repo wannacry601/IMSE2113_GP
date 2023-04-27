@@ -1,0 +1,129 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:fillViewport="true">
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="#9700BCD4"
+        tools:context=".home_page">
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            tools:layout_editor_absoluteX="0dp"
+            tools:layout_editor_absoluteY="0dp">
+
+            <TextView
+                android:id="@+id/item_name"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/username"
+                android:layout_marginTop="47dp"
+                android:padding="16dp"
+                android:text="item name"
+                android:textSize="24sp" />
+
+            <TextView
+                android:id="@+id/item_id"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/username"
+                android:layout_marginTop="-3dp"
+                android:padding="16dp"
+                android:text="item id"
+                android:textSize="24sp" />
+
+            <TextView
+                android:id="@+id/item_status"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/username"
+                android:layout_marginTop="104dp"
+                android:padding="16dp"
+                android:text="item status"
+                android:textSize="24sp" />
+
+            <TextView
+                android:id="@+id/username"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:padding="16dp"
+                android:text="username"
+                android:textSize="24sp" />
+
+            <Button
+                android:id="@+id/btn_modify_user_info"
+                android:layout_width="383dp"
+                android:layout_height="46dp"
+                android:layout_below="@+id/username"
+                android:layout_alignParentStart="true"
+                android:layout_marginStart="16dp"
+                android:layout_marginTop="543dp"
+                android:layout_marginEnd="20dp"
+                android:text="Modify user information"
+                android:textSize="20dp" />
+
+            <TextView
+                android:id="@+id/item_weight"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/username"
+                android:layout_marginTop="168dp"
+                android:padding="16dp"
+                android:text="item weight"
+                android:textSize="24sp" />
+            <TextView
+                android:id="@+id/item_description"
+                android:layout_width="match_parent"
+                android:layout_height="155dp"
+                android:layout_below="@+id/username"
+                android:layout_marginTop="234dp"
+                android:padding="16dp"
+                android:text="item_description"
+                android:textSize="24sp" />
+            <Button
+                android:id="@+id/scan_qr_code"
+                android:layout_width="150dp"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/item_description"
+                android:layout_alignParentEnd="true"
+                android:layout_marginTop="18dp"
+                android:layout_marginEnd="22dp"
+                android:text="Scan QRcode" />
+            <Button
+                android:id="@+id/item_modify"
+                android:layout_width="145dp"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/btn_modify_user_info"
+                android:layout_alignParentStart="true"
+                android:layout_marginStart="18dp"
+                android:layout_marginTop="415dp"
+                android:text="modify item" />
+            <Button
+                android:id="@+id/item_add"
+                android:layout_width="147dp"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/item_description"
+                android:layout_alignParentEnd="true"
+                android:layout_marginLeft="10dp"
+                android:layout_marginTop="17dp"
+                android:layout_marginEnd="195dp"
+                android:text="item add" />
+            <Button
+                android:id="@+id/logout"
+                android:layout_width="151dp"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/item_description"
+                android:layout_alignParentEnd="true"
+                android:layout_marginLeft="10dp"
+                android:layout_marginTop="81dp"
+                android:layout_marginEnd="19dp"
+                android:text="logout" />
+
+        </RelativeLayout>
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</ScrollView>

@@ -1,0 +1,4 @@
+<resources>
+    <string name="app_name">gp</string>
+    <string name="camera_permission_denied">Camera permission denied.</string>
+</resources>
