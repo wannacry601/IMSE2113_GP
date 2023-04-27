@@ -1,4 +1,5 @@
 from django.urls import include, path
+from django.contrib.staticfiles.urls import staticfiles_urlpatterns
 from rest_framework import routers
 from .views import *
 from . import views
@@ -22,11 +23,14 @@ urlpatterns = [
     path('api/checkauth', CheckAuth.as_view()),
     path('api/everything', AllDataViewSet.as_view({'get':'list'})),
     path('api-auth/', include('rest_framework.urls', namespace='rest_framework')),
+    path('index/', views.index, name='index'),
     path('how/', views.how, name='how'),
     path('about/', views.about, name='about'),
     path('login/', views.app_login, name='login'),
     path('logout/', views.app_logout, name='logout'), 
-    path('disable/', views.disable, name='disable'),
+    # path('disable/', views.disable, name='disable'),
     path('changeUser/', views.changeUser, name='changeUser'),
     path('addUser/', views.addUser, name='addUser'),
 ]
+
+urlpatterns += staticfiles_urlpatterns()

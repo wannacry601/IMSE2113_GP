@@ -18,6 +18,10 @@ debug = True #Turn false when in production
 
 home = lambda request: render(request, 'blank.html')
 
+def index(request):
+    return render(request, "index.html", {"is_admin": False})
+
+
 def how(request):
     return render(request, "how.html", {"is_admin": False})
 
@@ -47,7 +51,11 @@ def changeUser(request):
 def addUser(request):
     return render(request, "add_user.html")
     
+def addCargo(request):
+    pass
 
+def changeCargo(request):
+    pass
 
 
 # end of Django web application views
