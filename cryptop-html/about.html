@@ -16,18 +16,19 @@
 
   <!-- slider stylesheet -->
   <!-- slider stylesheet -->
+  {% load static %}
   <link rel="stylesheet" type="text/css"
-    href="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.3.4/assets/owl.carousel.min.css" />
+    href="{% static 'owl.carousel.min.css' %}" />
 
   <!-- bootstrap core css -->
-  <link rel="stylesheet" type="text/css" href="css/bootstrap.css" />
+  <link rel="stylesheet" type="text/css" href="{% static 'css/bootstrap.css'%}" />
 
   <!-- fonts style -->
-  <link href="https://fonts.googleapis.com/css?family=Roboto:400,700&display=swap" rel="stylesheet" />
+  <link href="{% static 'language.css' %}" rel="stylesheet" />
   <!-- Custom styles for this template -->
-  <link href="css/style.css" rel="stylesheet" />
+  <link href="{% static 'css/style.css' %}" rel="stylesheet" />
   <!-- responsive style -->
-  <link href="css/responsive.css" rel="stylesheet" />
+  <link href="{% static 'css/responsive.css' %}" rel="stylesheet" />
 </head>
 
 <body>
@@ -60,7 +61,7 @@
                 </li>
                 <li class="nav-item">
                   <a class="nav-link" href="#">
-                    <span>Wallet</span> <img src="images/wallet.png" alt="" />
+                    <span>Wallet</span> <img src="{% static 'images/wallet.png' %}" alt="" />
                   </a>
                 </li>
                 <li class="nav-item">
@@ -94,7 +95,7 @@
       </div>
       <div class="box">
         <div class="img-box">
-          <img src="images/about-img.png" alt="">
+          <img src="{% static 'images/about-img.png' %}" alt="">
         </div>
         <div class="detail-box">
           <p>
@@ -132,7 +133,7 @@
             </h5>
             <div>
               <div class="img-box">
-                <img src="images/location.png" width="18px" alt="" />
+                <img src="{% static 'images/location.png' %}" width="18px" alt="" />
               </div>
               <p>
                 Page when looking at its layou
@@ -140,7 +141,7 @@
             </div>
             <div>
               <div class="img-box">
-                <img src="images/phone.png" width="18px" alt="" />
+                <img src="{% static 'images/phone.png' %}" width="18px" alt="" />
               </div>
               <p>
                 +01 1234567890
@@ -148,7 +149,7 @@
             </div>
             <div>
               <div class="img-box">
-                <img src="images/envelope.png" width="18px" alt="" />
+                <img src="{% static 'images/envelope.png' %}" width="18px" alt="" />
               </div>
               <p>
                 demo@gmail.com
@@ -240,9 +241,9 @@
   </section>
   <!-- footer section -->
 
-  <script type="text/javascript" src="js/jquery-3.4.1.min.js"></script>
-  <script type="text/javascript" src="js/bootstrap.js"></script>
-  <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.3.4/owl.carousel.min.js">
+  <script type="text/javascript" src="{% static 'js/jquery-3.4.1.min.js' %}"></script>
+  <script type="text/javascript" src="{% static 'js/bootstrap.js' %}"></script>
+  <script type="text/javascript" src="{% static 'owl.carousel.min.js' %}">
   </script>
   <!-- owl carousel script 
     -->
