@@ -1,0 +1,171 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:fillViewport="true">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="#1A1A1A"
+        tools:context=".home_page">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="52dp"
+            android:gravity="center"
+            android:padding="16dp"
+            android:text="ADD NEW"
+            android:textColor="#817B7B"
+            android:textSize="40sp"
+            android:textStyle="bold"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <EditText
+            android:id="@+id/add_name"
+            android:layout_width="346dp"
+            android:layout_height="62dp"
+            android:padding="16dp"
+            android:hint="Type name"
+            android:textColorHint="#817B7B"
+            android:textSize="24sp"
+            tools:ignore="MissingConstraints"
+            tools:layout_editor_absoluteX="56dp"
+            tools:layout_editor_absoluteY="146dp" />
+
+        <ImageView
+            android:layout_width="56dp"
+            android:layout_height="62dp"
+            android:src="@drawable/item_name_logo"
+            tools:ignore="MissingConstraints"
+            tools:layout_editor_absoluteX="0dp"
+            tools:layout_editor_absoluteY="146dp" />
+
+        <EditText
+            android:id="@+id/add_pellet"
+            android:layout_width="346dp"
+            android:layout_height="62dp"
+            android:padding="16dp"
+            android:hint="Type pellet"
+            android:textColorHint="#817B7B"
+            android:textSize="24sp"
+            tools:ignore="MissingConstraints"
+            tools:layout_editor_absoluteX="56dp"
+            tools:layout_editor_absoluteY="363dp" />
+
+        <ImageView
+            android:layout_width="42dp"
+            android:layout_height="43dp"
+            android:src="@drawable/item_pellet_logo"
+            tools:ignore="MissingConstraints"
+            tools:layout_editor_absoluteX="10dp"
+            tools:layout_editor_absoluteY="372dp" />
+
+        <EditText
+            android:id="@+id/add_weight"
+            android:layout_width="346dp"
+            android:layout_height="62dp"
+            android:padding="16dp"
+            android:hint="Type weight"
+            android:textColorHint="#817B7B"
+            android:textSize="24sp"
+            tools:ignore="MissingConstraints"
+            tools:layout_editor_absoluteX="56dp"
+            tools:layout_editor_absoluteY="293dp" />
+
+        <ImageView
+            android:layout_width="34dp"
+            android:layout_height="39dp"
+            android:src="@drawable/item_weight_logo"
+            tools:ignore="MissingConstraints"
+            tools:layout_editor_absoluteX="12dp"
+            tools:layout_editor_absoluteY="300dp" />
+
+        <EditText
+            android:id="@+id/add_destination"
+            android:layout_width="346dp"
+            android:layout_height="62dp"
+            android:padding="16dp"
+            android:hint="Type destination"
+            android:textColorHint="#817B7B"
+            android:textSize="24sp"
+            tools:ignore="MissingConstraints"
+            tools:layout_editor_absoluteX="56dp"
+            tools:layout_editor_absoluteY="220dp" />
+
+        <ImageView
+            android:layout_width="56dp"
+            android:layout_height="62dp"
+            android:src="@drawable/item_destination_logo"
+            tools:ignore="MissingConstraints"
+            tools:layout_editor_absoluteX="0dp"
+            tools:layout_editor_absoluteY="220dp" />
+
+        <EditText
+            android:id="@+id/add_description"
+            android:layout_width="355dp"
+            android:layout_height="173dp"
+            android:hint="Type description"
+            android:padding="16dp"
+            android:textColorHint="#817B7B"
+            android:textSize="24sp"
+            tools:ignore="MissingConstraints"
+            tools:layout_editor_absoluteX="56dp"
+            tools:layout_editor_absoluteY="504dp" />
+
+        <ImageView
+            android:layout_width="51dp"
+            android:layout_height="52dp"
+            android:src="@drawable/item_description_logo"
+            tools:ignore="MissingConstraints"
+            tools:layout_editor_absoluteX="5dp"
+            tools:layout_editor_absoluteY="510dp" />
+        <EditText
+            android:id="@+id/add_time"
+            android:layout_width="346dp"
+            android:layout_height="62dp"
+            android:hint="Type time"
+            android:padding="16dp"
+            android:textColorHint="#817B7B"
+            android:textSize="24sp"
+            tools:ignore="MissingConstraints"
+            tools:layout_editor_absoluteX="56dp"
+            tools:layout_editor_absoluteY="434dp" />
+        <ImageView
+            android:layout_width="42dp"
+            android:layout_height="43dp"
+            android:src="@drawable/time_logo"
+            tools:ignore="MissingConstraints"
+            tools:layout_editor_absoluteX="8dp"
+            tools:layout_editor_absoluteY="444dp" />
+        <ImageButton
+            android:id="@+id/add_item_save"
+            android:src="@drawable/save_button"
+            android:layout_width="248dp"
+            android:layout_height="67dp"
+            android:layout_alignParentStart="true"
+            android:text="Save"
+            android:textSize="25dp"
+            tools:ignore="MissingConstraints"
+            android:scaleType="centerInside"
+            tools:layout_editor_absoluteX="81dp"
+            tools:layout_editor_absoluteY="741dp" />
+
+        <ImageButton
+            android:id="@+id/add_item_back"
+            android:layout_width="80dp"
+            android:layout_height="39dp"
+            android:background="@color/cardview_dark_background"
+            android:scaleType="centerCrop"
+
+            android:src="@drawable/add_back_button"
+            tools:ignore="MissingConstraints,SpeakableTextPresentCheck,TouchTargetSizeCheck"
+            tools:layout_editor_absoluteX="13dp"
+            tools:layout_editor_absoluteY="16dp" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</ScrollView>
