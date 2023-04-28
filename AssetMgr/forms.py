@@ -1,7 +1,8 @@
 from django import forms
 from django.contrib.auth.models import User
 from django.contrib.auth.forms import UserCreationForm, UserChangeForm
-from .models import Pellet
+from . import models
+from GroupProject import settings
 
 class LoginForm(forms.Form):
     username = forms.CharField(max_length=150)
@@ -28,13 +29,25 @@ class ChangePassword(forms.Form):
     new_Password = forms.CharField(widget=forms.PasswordInput())
 
 class Cargo(forms.Form):
+
     is_in_warehouse = forms.BooleanField()
-    on_pellet = forms.ModelChoiceField(queryset=Pellet.objects.all())
+    on_pellet = forms.ModelChoiceField(queryset=models.Pellet.objects.all())
     destination = forms.CharField(max_length = 50)
-    arrival_date = forms.DateField()
+    arrival_date = forms.DateField(input_formats=settings.DATE_INPUT_FORMATS)
     origin = forms.CharField(max_length = 50)
-    due_outbound_date = forms.DateField()
+    due_outbound_date = forms.DateField(input_formats=settings.DATE_INPUT_FORMATS)
     name = forms.CharField(max_length = 32)
     desc = forms.CharField(max_length = 200)
     weight = forms.DecimalField(max_digits=4, decimal_places=2)
-    category = forms.CharField()
+    category = forms.ModelChoiceField(queryset=models.Products.objects.all())
+    # class Meta:
+    #     model = models.Cargo
+    #     fields = ('is_in_warehouse', 
+    #               'on_pellet', 
+    #               'destination', 
+    #               'arrival_date', 
+    #               'origin', 
+    #               'due_outbound_date', 'name', 
+    #               'desc',
+    #               'weight',
+    #               'category',)

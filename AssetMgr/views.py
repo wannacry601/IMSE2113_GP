@@ -19,7 +19,7 @@ DEBUG = (permissions.AllowAny)
 debug = True #Turn false when in production
 
 
-home = lambda request: render(request, 'blank.html')
+# home = lambda request: render(request, 'blank.html')
 
 def index(request):
     user = request.user
@@ -29,6 +29,8 @@ def index(request):
         return render(request, "home.html", {"is_admin": False})
     else:
         return redirect(app_login)
+
+home = index
 
 def how(request):
     user = request.user
@@ -106,25 +108,39 @@ def addUser(request):
     
 def addCargo(request):
     if request.method == 'POST':
-        form = forms.Cargo(request.POST.pop('csrfmiddlewaretoken'))
-        try:
-            kwargs={'is_in_warehouse':{'on':True, 'off':False}[request.POST['is_in_warehouse']], 
-                'on_pellet':int(request.POST['on_pellet']), 
-                'destination':request.POST['destination'], 
-                'arrival_date': datetime(*[int(i) for i in request.POST['arrival_date'].split('/')][::-1] + [0,0,0,0]), 
-                'origin':request.POST['origin'],
-                'due_outbound_date':datetime(*[int(i) for i in request.POST['due_outbound_date'].split('/')][::-1] + [0,0,0,0]), 
-                'name':request.POST['name'],
-                'desc':request.POST['desc'],
-                'weight':int(request.POST['weight']),
-                'caregory':request.POST['category']}
-            models.Cargo(kwargs).save()
-            print(11)
+        
+        # queryset = (request.POST['is_in_warehouse'].__class__)
+        # queryset = dict(request.POST)
+        # queryset = {key: request.POST[key] for key in request.POST}
+        # print(queryset.pop('csrfmiddlewaretoken').__class__)
+        # print(queryset)
+        # print(request.POST['is_in_warehouse'])#.__class__)
+        # querydict = request.POST.__class__
+        # print(querydict(queryset))
+        form = forms.Cargo(request.POST)
+        assert form.is_valid()
+        print(form.cleaned_data)
+        # form.save()
+        models.Cargo(**form.cleaned_data).save()
+        # assert form.is_valid(), "Form validation failed"
+        
+        # models.Cargo(form).save()
+            # kwargs={'is_in_warehouse':{'on':True, 'off':False}[request.POST['is_in_warehouse']], 
+            #     'on_pellet':int(request.POST['on_pellet']), 
+            #     'destination':request.POST['destination'], 
+            #     'arrival_date': datetime(*[int(i) for i in request.POST['arrival_date'].split('/')][::-1] + [0,0,0,0]), 
+            #     'origin':request.POST['origin'],
+            #     'due_outbound_date':datetime(*[int(i) for i in request.POST['due_outbound_date'].split('/')][::-1] + [0,0,0,0]), 
+            #     'name':request.POST['name'],
+            #     'desc':request.POST['desc'],
+            #     'weight':int(request.POST['weight']),
+            #     'caregory':request.POST['category']}
+            # models.Cargo(kwargs).save()
+        print(11)
         # if form.is_valid():
             # Cargo(form.cleaned_data).save()
-            error = False
-        except :
-            error = True
+        error = False
+        # error = True
         return render(request, 'add_cargo.html', {'form': form, 'error':error})
     else:
         form = forms.Cargo()
@@ -156,16 +172,25 @@ def search(request):
 def inventoryReport(request):
     cargo_set = models.Cargo.objects.all()
     if request.method == "POST":
-        filename = str(datetime.now()).replace(" ", "_")
+        filename = 'inventory_report' + str(datetime.now()).replace(" ", "_")
         df = pandas.DataFrame.from_records(cargo_set.values())
         response = HttpResponse(df.to_csv())
         response.headers['Content-Type'] = 'application/csv'
         response.headers['Content-Disposition'] = f'attachment; filename="{filename}"'
     else:
-        pass
+        return HttpResponse('Method not allowed!')
 
 def userReport(request):
-    pass
+    user_set = User.objects.all()
+    if request.method == "POST":
+        filename = 'user_report' + str(datetime.now()).replace(" ", "_")
+        df = pandas.DataFrame.from_records(user_set.values())
+        response = HttpResponse(df.to_csv())
+        response.headers['Content-Type'] = 'application/csv'
+        response.headers['Content-Disposition'] = f'attachment; filename="{filename}"'
+    else:
+        return HttpResponse('Method not allowed!')
+
 
 
 # end of Django web application views

@@ -134,3 +134,4 @@ REST_FRAMEWORK = {
 }
 
 STATIC_ROOT = BASE_DIR / 'static_collected'
+DATE_INPUT_FORMATS = ('%d/%m/%Y', '%d-%m-%Y')

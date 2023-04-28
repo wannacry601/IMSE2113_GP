@@ -34,10 +34,10 @@ class Order(models.Model):
     description = models.CharField(max_length=200, null = True)
    
 class Products(models.Model):
-    name = models.CharField(max_length=20)
+    name = models.CharField(max_length=20, unique=True)
     description = models.CharField(max_length=200)
 
-# Products(name='table', description='company')
+# Products(name='table', description='table').save()
 
 # Create your models here.
 
