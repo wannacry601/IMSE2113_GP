@@ -108,39 +108,11 @@ def addUser(request):
     
 def addCargo(request):
     if request.method == 'POST':
-        
-        # queryset = (request.POST['is_in_warehouse'].__class__)
-        # queryset = dict(request.POST)
-        # queryset = {key: request.POST[key] for key in request.POST}
-        # print(queryset.pop('csrfmiddlewaretoken').__class__)
-        # print(queryset)
-        # print(request.POST['is_in_warehouse'])#.__class__)
-        # querydict = request.POST.__class__
-        # print(querydict(queryset))
         form = forms.Cargo(request.POST)
-        assert form.is_valid()
-        print(form.cleaned_data)
-        # form.save()
-        models.Cargo(**form.cleaned_data).save()
-        # assert form.is_valid(), "Form validation failed"
-        
-        # models.Cargo(form).save()
-            # kwargs={'is_in_warehouse':{'on':True, 'off':False}[request.POST['is_in_warehouse']], 
-            #     'on_pellet':int(request.POST['on_pellet']), 
-            #     'destination':request.POST['destination'], 
-            #     'arrival_date': datetime(*[int(i) for i in request.POST['arrival_date'].split('/')][::-1] + [0,0,0,0]), 
-            #     'origin':request.POST['origin'],
-            #     'due_outbound_date':datetime(*[int(i) for i in request.POST['due_outbound_date'].split('/')][::-1] + [0,0,0,0]), 
-            #     'name':request.POST['name'],
-            #     'desc':request.POST['desc'],
-            #     'weight':int(request.POST['weight']),
-            #     'caregory':request.POST['category']}
-            # models.Cargo(kwargs).save()
-        print(11)
-        # if form.is_valid():
-            # Cargo(form.cleaned_data).save()
-        error = False
-        # error = True
+        if form.is_valid():
+            models.Cargo(**form.cleaned_data).save()
+            error = False
+        else: error = True
         return render(request, 'add_cargo.html', {'form': form, 'error':error})
     else:
         form = forms.Cargo()
