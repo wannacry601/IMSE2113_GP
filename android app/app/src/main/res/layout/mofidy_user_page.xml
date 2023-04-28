@@ -1,0 +1,114 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:fillViewport="true">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="#1A1A1A"
+        tools:context=".home_page">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="52dp"
+            android:gravity="center"
+            android:padding="16dp"
+            android:text="Modify User Information"
+            android:textColor="#817B7B"
+            android:textSize="40sp"
+            android:textStyle="bold"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.0"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <EditText
+            android:id="@+id/modified_phonenumber"
+            android:layout_width="346dp"
+            android:layout_height="62dp"
+            android:hint="Type phonenumber"
+            android:padding="16dp"
+            android:textColorHint="#817B7B"
+            android:textSize="20sp"
+            tools:ignore="MissingConstraints"
+            tools:layout_editor_absoluteX="56dp"
+            tools:layout_editor_absoluteY="434dp" />
+
+        <EditText
+            android:id="@+id/modified_username"
+            android:layout_width="345dp"
+            android:layout_height="60dp"
+            android:hint="Type username"
+            android:padding="16dp"
+            android:textColorHint="#817B7B"
+            android:textSize="20sp"
+            tools:ignore="MissingConstraints,TouchTargetSizeCheck"
+            tools:layout_editor_absoluteX="56dp"
+            tools:layout_editor_absoluteY="217dp" />
+
+        <EditText
+            android:id="@+id/modified_password_confirmation"
+            android:layout_width="346dp"
+            android:layout_height="62dp"
+            android:hint="Type password again"
+            android:padding="16dp"
+            android:textColorHint="#817B7B"
+            android:textSize="20sp"
+            tools:ignore="MissingConstraints"
+            tools:layout_editor_absoluteX="56dp"
+            tools:layout_editor_absoluteY="364dp" />
+
+        <EditText
+            android:id="@+id/modified_password"
+            android:layout_width="346dp"
+            android:layout_height="62dp"
+            android:hint="Type password"
+            android:padding="16dp"
+            android:textColorHint="#817B7B"
+            android:textSize="20sp"
+            tools:ignore="MissingConstraints"
+            tools:layout_editor_absoluteX="56dp"
+            tools:layout_editor_absoluteY="291dp" />
+
+        <EditText
+            android:id="@+id/modified_email"
+            android:layout_width="346dp"
+            android:layout_height="62dp"
+            android:hint="Type email"
+            android:padding="16dp"
+            android:textColorHint="#817B7B"
+            android:textSize="20sp"
+            tools:ignore="MissingConstraints"
+            tools:layout_editor_absoluteX="56dp"
+            tools:layout_editor_absoluteY="505dp" />
+
+        <ImageButton
+            android:id="@+id/modified_user_save"
+            android:layout_width="317dp"
+            android:layout_height="80dp"
+            android:layout_alignParentStart="true"
+            android:background="#1A1A1A"
+            android:scaleType="centerInside"
+            android:src="@drawable/save_button"
+            tools:ignore="MissingConstraints,SpeakableTextPresentCheck"
+            tools:layout_editor_absoluteX="47dp"
+            tools:layout_editor_absoluteY="731dp" />
+
+        <ImageButton
+            android:id="@+id/modified_user_back"
+            android:layout_width="80dp"
+            android:layout_height="39dp"
+            android:background="@color/cardview_dark_background"
+            android:scaleType="centerCrop"
+
+            android:src="@drawable/add_back_button"
+            tools:ignore="MissingConstraints,SpeakableTextPresentCheck,TouchTargetSizeCheck"
+            tools:layout_editor_absoluteX="13dp"
+            tools:layout_editor_absoluteY="16dp" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</ScrollView>
