@@ -32,6 +32,9 @@ urlpatterns = [
     # path('disable/', views.disable, name='disable'),
     path('changeUser/', views.changeUser, name='changeUser'),
     path('addUser/', views.addUser, name='addUser'),
+    path('addCargo/', views.addCargo, name='addCargo'),
+    path('search/', views.search, name='search'),
+
 ]
 
 urlpatterns += staticfiles_urlpatterns()

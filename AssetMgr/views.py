@@ -105,7 +105,30 @@ def addUser(request):
     return render(request, "add_user.html")
     
 def addCargo(request):
-    pass
+    if request.method == 'POST':
+        form = forms.Cargo(request.POST.pop('csrfmiddlewaretoken'))
+        try:
+            kwargs={'is_in_warehouse':{'on':True, 'off':False}[request.POST['is_in_warehouse']], 
+                'on_pellet':int(request.POST['on_pellet']), 
+                'destination':request.POST['destination'], 
+                'arrival_date': datetime(*[int(i) for i in request.POST['arrival_date'].split('/')][::-1] + [0,0,0,0]), 
+                'origin':request.POST['origin'],
+                'due_outbound_date':datetime(*[int(i) for i in request.POST['due_outbound_date'].split('/')][::-1] + [0,0,0,0]), 
+                'name':request.POST['name'],
+                'desc':request.POST['desc'],
+                'weight':int(request.POST['weight']),
+                'caregory':request.POST['category']}
+            models.Cargo(kwargs).save()
+            print(11)
+        # if form.is_valid():
+            # Cargo(form.cleaned_data).save()
+            error = False
+        except :
+            error = True
+        return render(request, 'add_cargo.html', {'form': form, 'error':error})
+    else:
+        form = forms.Cargo()
+        return render(request, 'add_cargo.html', {'form': form, 'error':2})
 
 def changeCargo(request):
     pass
