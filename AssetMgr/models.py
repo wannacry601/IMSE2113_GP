@@ -37,5 +37,7 @@ class Products(models.Model):
     name = models.CharField(max_length=20)
     description = models.CharField(max_length=200)
 
+# Products(name='table', description='company')
+
 # Create your models here.
 

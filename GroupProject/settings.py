@@ -133,3 +133,4 @@ REST_FRAMEWORK = {
     ],
 }
 
+STATIC_ROOT = BASE_DIR / 'static_collected'
