@@ -5,6 +5,7 @@ from django.shortcuts import render
 from django.apps import apps
 from django.http import HttpResponse, HttpResponseRedirect
 from django.contrib.auth import login, logout
+from django.contrib.auth.models import User
 from rest_framework import viewsets, permissions, views, mixins
 from rest_framework.response import Response
 from rest_framework.renderers import JSONRenderer
@@ -13,6 +14,8 @@ from .serializers import *
 from . import models, forms
 from django.contrib.auth import login, logout
 import pandas
+import qrcode
+import json
 
 # the Django web application views
 DEBUG = (permissions.AllowAny)
@@ -98,8 +101,19 @@ def app_logout(request):
         return redirect(home)
 
 
-def changeUser(request):
-    pass
+def changeUser(request,userid):
+    if request.method == "GET":
+        userinf = list(User.objects.filter(id=userid).values_list('*'))
+        return render(request,'user_manage.html',{"infos":userinf})
+    if request.method == "POST":
+        userinfdict = User.objects.filter(id=userid).values('*')
+        updated_data = dict()
+        for column in User._meta.get_fields():
+            updated_data[column] = request.POST.get(f'{column}')
+        updated_data = json.dumps(updated_data)
+        user = UserSerializer()
+        user.update(user,userinfdict,updated_data)
+        return HttpResponseRedirect('/')
 
 def addUser(request):
     return render(request, "add_user.html")
@@ -130,8 +144,21 @@ def addCargo(request):
         form = forms.Cargo()
         return render(request, 'add_cargo.html', {'form': form, 'error':2})
 
-def changeCargo(request):
-    pass
+def changeCargo(request,cargoid):
+    if request.method == "GET":
+        cargoinf = list(Cargo.objects.filter(id=cargoid).values_list('*'))
+        return render(request,'cargo_manage.html',{"infos":cargoinf})
+    if request.method == "POST":
+        cargoinfdict = Cargo.objects.filter(id=cargoid).values('*')
+        updated_data = dict()
+        for column in Cargo._meta.get_fields():
+            updated_data[column] = request.POST.get(f'{column}')
+        updated_data = json.dumps(updated_data)
+        cargo = CargoSerializer()
+        cargo.update(cargo,cargoinfdict,updated_data)
+        return HttpResponseRedirect('/')
+        
+    
 
 def search(request):
     try:
