@@ -127,11 +127,15 @@ def search(request):
     except KeyError:
         query_string = ''
 
-    # try:
-    #     search_type = request.GET['type']
-    # except KeyError:
-    #     search_type = 'name'
-    search_type = 'name'
+    try:
+        search_type = request.GET['type']
+    except KeyError:
+        search_type = None
+    
+    if not search_type:
+        form = forms.SearchForm()
+        return render(request, 'search.html', {'form': form})
+
     query_string = query_string.strip()
     query_string = '.*' + query_string + '.*'
     if query_string == '':

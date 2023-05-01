@@ -14,9 +14,19 @@
 {% endblock %}
 
 {% block content %}
-{% if form %}
 
-{{ form.as_p }}
+    {% if form %}
+        {{ form.as_p }}
+    {% endif %}
 
-{% endif %}
+    {% if queryset %}
+        {% for cargo in queryset %}
+            cargo.id
+            cargo.name
+            cargo.destination
+            cargo.desc
+
+        {% endfor %}
+    {% endif %}
+
 {% endblock %}
