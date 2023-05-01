@@ -16,10 +16,11 @@
 
   <!-- slider stylesheet -->
   <!-- slider stylesheet -->
-  {% load static %}
+
   {% block style %}
 
   {% endblock %}
+  {% load static %}
   <link rel="stylesheet" type="text/css"
     href="{% static 'owl.carousel.min.css' %}" />
 
@@ -57,23 +58,21 @@
                 {% block navbar%}
 
                 {% endblock %}
+
                 <li class="nav-item">
-                  <a class="nav-link" href="#">
-                    <span>Wallet</span> <img src="{% static 'images/wallet.png' %}" alt="" />
-                  </a>
+                  <a class="nav-link" href="../login/"> Login as Another User</a>
                 </li>
                 <li class="nav-item">
-                  <a class="nav-link" href=""> Login</a>
+                  <a class="nav-link" href="../addUser"> Add User</a>
                 </li>
                 <li class="nav-item">
-                  <a class="nav-link" href=""> Sign Up</a>
-                </li>
+                <a class="nav-link" href="../search"> Search a cargo</a>
+                </li>              
               </ul>
-              <div class="user_option">
+              <div class="nav-item">
                 <!-- <form class="form-inline my-2 my-lg-0 ml-0 ml-lg-4 mb-3 mb-lg-0">
                   <button class="btn  my-2 my-sm-0 nav_search-btn" type="submit"></button>
                 </form> -->
-                <a class="nav-link" href=""> Search a cargo</a>
 
               </div>
             </div>
@@ -108,7 +107,9 @@
                 <img src="{% static 'images/location.png' %}" width="18px" alt="" />
               </div>
               <p>
-                Page when looking at its layou
+                The University of Hong Kong
+                <br>Chi Wah Learning Commons
+                <br>Room 16
               </p>
             </div>
             <div>

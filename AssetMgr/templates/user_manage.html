@@ -1,5 +1,18 @@
 <!DOCTYPE HTML>
 <html>
+    {% block navbar %}
+    <li class="nav-item">
+        <a class="nav-link" href="../index/">Home <span class="sr-only">(current)</span></a>
+    </li>
+    <li class="nav-item">
+        <a class="nav-link" href="../about/"> About </a>
+    </li>
+    <li class="nav-item">
+        <a class="nav-link" href="../how/"> Usage </a>
+    </li>
+    {% endblock %}
+
+
     {% extends 'layout.html' %}
     {% block title%}User Management{% endblock %}
     {% block contents %}
@@ -8,7 +21,7 @@
     {% csrf_token %}
     {% for info in infos %}
     <label>{{ info.id }}</label>
-    <input type="text" value={{ info }} id="{{ info.id }}"/>
+    <input type="text" value="{{ info }}" id="{{ info.id }}"/>
     {% endfor %}
     <button type="submit">SAVE</button>
     </form>

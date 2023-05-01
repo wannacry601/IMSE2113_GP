@@ -17,7 +17,7 @@ class SignUpForm(UserCreationForm):
     first_name = forms.CharField(max_length=150)
     last_name=forms.CharField(max_length=150)
     email=forms.EmailField(max_length=150)
-    is_superuser=forms.ChoiceField(widget=forms.RadioSelect(),choices=(('Yes','Yes'),('No', 'No')))
+    is_superuser=forms.ChoiceField(widget=forms.RadioSelect(),choices=((True,'Yes'),(False, 'No')))
 
     class Meta(UserCreationForm.Meta):
         model = User

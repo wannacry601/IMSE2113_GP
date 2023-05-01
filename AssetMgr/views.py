@@ -24,7 +24,7 @@ debug = True #Turn false when in production
 
 
 # home = lambda request: render(request, 'blank.html')
-@decorators.login_required
+# @decorators.login_required("/login/")
 def index(request):
     user = request.user
     if user.is_authenticated:
@@ -36,7 +36,7 @@ def index(request):
 
 home = index
 
-@decorators.login_required
+# @decorators.login_required("/login/")
 def how(request):
     user = request.user
     if user.is_authenticated:
@@ -46,7 +46,7 @@ def how(request):
     else:
         return redirect(app_login)
 
-@decorators.login_required
+# @decorators.login_required("/login/")
 def about(request):
     user = request.user
     if user.is_authenticated:
@@ -56,7 +56,6 @@ def about(request):
     else:
         return redirect(app_login)
 
-@decorators.login_required
 def app_login(request):
     empty_form = forms.LoginForm()
     if request.method == "POST":
@@ -86,7 +85,7 @@ def app_login(request):
     else:
         return render(request, 'login.html', {'error': False, 'form': empty_form})
 
-@decorators.login_required
+# @decorators.login_required("/login/")
 def app_logout(request):
     if request.method == "POST":
         user = request.user
@@ -105,8 +104,13 @@ def app_logout(request):
     else:
         return redirect(home)
 
-@decorators.login_required
+# @decorators.login_required("/login/")
 def changeUser(request,userid):
+
+    current_user = request.user
+    if not current_user.is_authenticated:
+        return redirect(app_login)
+
     if request.method == "GET":
         userinf = list(User.objects.filter(id=userid).values_list('*'))
         return render(request,'user_manage.html',{"infos":userinf})
@@ -120,12 +124,34 @@ def changeUser(request,userid):
         user.update(user,userinfdict,updated_data)
         return HttpResponseRedirect('/')
 
-@decorators.login_required
-def addUser(request):
-    return render(request, "add_user.html")
 
-@decorators.login_required  
+# @decorators.login_required("/login/")
+def addUser(request):
+    current_user = request.user
+    if not current_user.is_authenticated:
+        return redirect(app_login)
+    
+    if not current_user.is_superuser:
+        return render(request, 'add_user.html', {'error':3})
+
+    if request.method == 'POST':
+        form = forms.SignUpForm(request.POST)
+        if form.is_valid():
+            User(**form.cleaned_data).save()
+            error = False
+        else: error = True
+        return render(request, 'add_user.html', {'form': form, 'error':error})
+    else:
+        form = forms.SignUpForm()
+        return render(request, 'add_user.html', {'form': form, 'error':2})
+
+# @decorators.login_required("/login/")  
 def addCargo(request):
+
+    current_user = request.user
+    if not current_user.is_authenticated:
+        return redirect(app_login)
+
     if request.method == 'POST':
         form = forms.Cargo(request.POST)
         if form.is_valid():
@@ -137,7 +163,13 @@ def addCargo(request):
         form = forms.Cargo()
         return render(request, 'add_cargo.html', {'form': form, 'error':2})
 
+# @decorators.login_required("/login/")  
 def changeCargo(request,cargoid):
+
+    current_user = request.user
+    if not current_user.is_authenticated:
+        return redirect(app_login)
+
     if request.method == "GET":
         cargoinf = list(Cargo.objects.filter(id=cargoid).values_list('*'))
         return render(request,'cargo_manage.html',{"infos":cargoinf})
@@ -153,8 +185,13 @@ def changeCargo(request,cargoid):
         
     
 
-@decorators.login_required
+# @decorators.login_required("/login/")
 def search(request):
+
+    current_user = request.user
+    if not current_user.is_authenticated:
+        return redirect(app_login)
+
     try:
         query_string = request.GET['query_string']
     except KeyError:
@@ -189,8 +226,13 @@ def search(request):
         return render(request, 'search.html', {"queryset": queryset, 'found': True})
     return render(request, 'search.html', {'found': True, 'form':form})
 
-@decorators.login_required
+# @decorators.login_required("/login/")
 def inventoryReport(request):
+
+    current_user = request.user
+    if not current_user.is_authenticated:
+        return redirect(app_login)
+
     cargo_set = models.Cargo.objects.all()
     if request.method == "POST":
         filename = 'inventory_report' + str(datetime.now()).replace(" ", "_")
@@ -201,8 +243,13 @@ def inventoryReport(request):
     else:
         return HttpResponse('Method not allowed!')
 
-@decorators.login_required
+# @decorators.login_required("/login/")
 def userReport(request):
+
+    current_user = request.user
+    if not current_user.is_authenticated:
+        return redirect(app_login)
+
     user_set = User.objects.all()
     if request.method == "POST":
         filename = 'user_report' + str(datetime.now()).replace(" ", "_")
