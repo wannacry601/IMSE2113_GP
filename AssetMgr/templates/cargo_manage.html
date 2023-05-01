@@ -1,4 +1,4 @@
-    {% extends 'layout.html' %}
+{% extends 'layout.html' %}
 
 
 {% block navbar %}
@@ -27,16 +27,18 @@
 {% block title%}Cargo Management{% endblock %}
 
     {% block content %}
-    {% if infos %}
-    <form method="POST" action="">
-    {% csrf_token %}
-    {% for info in infos %}<!--infos from one cargo row-->
-    <label>{{ info.id }}</label>
-    <input type="text" value="{{ info }}" class="input" id="{{ info.id }}"/>
-    {% endfor %}
-    <button type="submit">SAVE</button>
-    </form>
-    {% else %}
-    <a>No item information. Check if ID right.</a>
-    {% endif %}
-    {% endblock content %}
+        {% if infos %}
+        <form method="POST" id="form" action="">
+            {% csrf_token %}
+            <!--infos from one cargo row-->
+            {% for key,value in infos.items %}
+            <label>{{ key }}: </label>
+            <input type="text" value="{{ value }}" name={{ key }}><br>
+            {% endfor %}
+            <button type="submit">SAVE</button>
+        </form>
+
+        {% else %}
+            <a>No item information. Check if ID right.</a>
+        {% endif %}
+    {% endblock %}
