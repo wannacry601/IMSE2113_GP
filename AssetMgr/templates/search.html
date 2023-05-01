@@ -63,10 +63,14 @@
         </tr>
         {% endfor %}
     </table>
-    {% endif %}
-
-    {% if not found or not queryset %}
+    {% else %}
+    {% if not form %}    
         <p>Nothing Found, try something else</p>
     {% endif %}
+    {% endif %}
+
+    <!-- {% if not found %}
+        <p>Nothing Found, try something else</p>
+    {% endif %} -->
 </div>
 {% endblock %}

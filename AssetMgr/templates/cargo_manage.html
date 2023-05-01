@@ -33,7 +33,7 @@
             <!--infos from one cargo row-->
             {% for key,value in infos.items %}
             <label>{{ key }}: </label>
-            <input type="text" value="{{ value }}" name={{ key }}><br>
+            <input type="text" value="{{ value }}" name="{{ key }}"><br>
             {% endfor %}
             <button type="submit">SAVE</button>
         </form>

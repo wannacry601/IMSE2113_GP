@@ -288,26 +288,26 @@ def search(request):
     form = forms.SearchForm()
 
     if not search_type:
-        return render(request, 'search.html', {'form': form, 'found': True})
+        return render(request, 'search.html', {'form': form})
 
     query_string = query_string.strip()
     query_string = '.*' + query_string + '.*'
     if query_string == '':
-        return render(request, 'search.html', {'found': False})
+        return render(request, 'search.html', )#{'found': False})
 
     if search_type == 'name':
         queryset = models.Cargo.objects.filter(name__regex=query_string)
-        return render(request, 'search.html', {"queryset": queryset, 'found': True})
+        return render(request, 'search.html', {"queryset": queryset})
     if search_type == 'id':
         queryset = models.Cargo.objects.filter(id__regex=query_string)
-        return render(request, 'search.html', {"queryset": queryset, 'found': True})
+        return render(request, 'search.html', {"queryset": queryset})
     if search_type == 'destination':
         queryset = models.Cargo.objects.filter(destination__regex=query_string)
-        return render(request, 'search.html', {"queryset": queryset, 'found': True})
+        return render(request, 'search.html', {"queryset": queryset})
     if search_type == 'desc':
         queryset = models.Cargo.objects.filter(desc__regex=query_string)
-        return render(request, 'search.html', {"queryset": queryset, 'found': True})
-    return render(request, 'search.html', {'found': True, 'form':form})
+        return render(request, 'search.html', {"queryset": queryset})
+    return render(request, 'search.html', {'form':form})
 
 # @decorators.login_required("/login/")
 def inventoryReport(request):
