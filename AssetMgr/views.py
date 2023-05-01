@@ -1,3 +1,4 @@
+import sqlite3
 from django.shortcuts import render, redirect
 from rest_framework import viewsets, permissions
 from inspect import isclass
@@ -110,7 +111,24 @@ def changeUser(request,userid):
     current_user = request.user
     if not current_user.is_authenticated:
         return redirect(app_login)
-
+    idlist = [
+            'auth_token', 
+            'date_joined', 
+            'email', 
+            'first_name', 
+            'groups', 
+            'id',
+            'is_active', 
+            'is_staff', 
+            'is_superuser', 
+            'last_login', 
+            'last_name', 
+            'logentry', 
+            'password', 
+            'user_permissions', 
+            'username'
+        ]
+    implementdata = dict()
     if request.method == "GET":
         userinf = list(User.objects.filter(id=userid).values_list(
             'auth_token', 
@@ -128,30 +146,17 @@ def changeUser(request,userid):
             'password', 
             'user_permissions', 
             'username'))
-        return render(request,'user_manage.html',{"infos":userinf})
+        for i in range(len(idlist)): implementdata[idlist[i]]=userinf[0][i]
+        print(implementdata)
+        return render(request,'user_manage.html',{"infos":implementdata})
     if request.method == "POST":
-        userinfdict = {User.objects.filter(id=userid).values(
-            'auth_token', 
-            'date_joined', 
-            'email', 
-            'first_name', 
-            'groups', 
-            'id',
-            'is_active', 
-            'is_staff', 
-            'is_superuser', 
-            'last_login', 
-            'last_name', 
-            'logentry', 
-            'password', 
-            'user_permissions', 
-            'username')}
         updated_data = dict()
-        for column in User._meta.get_fields():
-            updated_data[column] = request.POST.get(f'{column}')
-        updated_data = json.dumps(updated_data)
-        user = UserSerializer()
-        user.update(user,userinfdict,updated_data)
+        for column in idlist: updated_data[column] = request.POST.get(f'{column}')
+        conn = sqlite3.connect('db.sqlite3')
+        cursor = conn.cursor()
+        for column in updated_data: cursor.execute(f"UPDATE auth_user SET {column}=\'{updated_data[column]}\' WHERE id = \'{request.user.id}\'")
+        cursor.close()
+        conn.commit()
         return HttpResponseRedirect('/')
 
 
@@ -199,7 +204,19 @@ def changeCargo(request,cargoid):
     current_user = request.user
     if not current_user.is_authenticated:
         return redirect(app_login)
-
+    implementdata = dict()
+    idlist = ['is_in_warehouse',
+            'on_pellet',
+            'destination',
+            'arrival_date',
+            'origin',
+            'due_outbound_date',
+            'name',
+            'id',
+            'desc',
+            'weight',
+            'category'
+        ]
     if request.method == "GET":
         cargoinf = list(Cargo.objects.filter(id=cargoid).values_list(
             'is_in_warehouse',
@@ -214,26 +231,22 @@ def changeCargo(request,cargoid):
             'weight',
             'category'
         ))
-        return render(request,'cargo_manage.html',{"infos":cargoinf})
+        for i in range(len(idlist)): implementdata[idlist[i]]=cargoinf[0][i]
+        return render(request,'cargo_manage.html',{"infos":implementdata})
     if request.method == "POST":
-        cargoinfdict = Cargo.objects.filter(id=cargoid).values(
-            'is_in_warehouse',
-            'on_pellet',
-            'destination',
-            'arrival_date',
-            'origin',
-            'due_outbound_date',
-            'name',
-            'id',
-            'desc',
-            'weight',
-            'category')
         updated_data = dict()
-        for column in Cargo._meta.get_fields():
-            updated_data[column] = request.POST.get(f'{column}')
-        updated_data = json.dumps(updated_data)
-        cargo = CargoSerializer()
-        cargo.update(cargo,cargoinfdict,updated_data)
+        for column in idlist:
+            if (column=="on_pellet" or column=="category"):updated_data[column+"_id"] = request.POST.get(f'{column}')
+            else:updated_data[column] = request.POST.get(f'{column}')
+        conn = sqlite3.connect('db.sqlite3')
+        cursor = conn.cursor()
+        id = updated_data['id']
+        for column in updated_data:
+            print(column)
+            print(updated_data[column])
+            cursor.execute(f"UPDATE AssetMgr_Cargo SET {column}=\'{updated_data[column]}\' WHERE id = \'{id}\'")
+        cursor.close()
+        conn.commit()
         return HttpResponseRedirect('/')
         
     
