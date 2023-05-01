@@ -1,10 +1,11 @@
+import sqlite3
 from django.shortcuts import render, redirect
 from rest_framework import viewsets, permissions
 from inspect import isclass
 from django.shortcuts import render
 from django.apps import apps
 from django.http import HttpResponse, HttpResponseRedirect
-from django.contrib.auth import login, logout
+from django.contrib.auth import login, logout, hashers
 from django.contrib.auth.models import User
 from rest_framework import viewsets, permissions, views, mixins
 from rest_framework.response import Response
@@ -12,6 +13,7 @@ from rest_framework.renderers import JSONRenderer
 from django.utils.timezone import datetime
 from .serializers import *
 from . import models, forms
+from django.contrib.auth import decorators
 from django.contrib.auth import login, logout
 import pandas
 import qrcode
@@ -22,8 +24,8 @@ DEBUG = (permissions.AllowAny)
 debug = True #Turn false when in production
 
 
-home = lambda request: render(request, 'blank.html')
-
+# home = lambda request: render(request, 'blank.html')
+# @decorators.login_required("/login/")
 def index(request):
     user = request.user
     if user.is_authenticated:
@@ -33,6 +35,9 @@ def index(request):
     else:
         return redirect(app_login)
 
+home = index
+
+# @decorators.login_required("/login/")
 def how(request):
     user = request.user
     if user.is_authenticated:
@@ -42,6 +47,7 @@ def how(request):
     else:
         return redirect(app_login)
 
+# @decorators.login_required("/login/")
 def about(request):
     user = request.user
     if user.is_authenticated:
@@ -50,7 +56,7 @@ def about(request):
         return render(request, "about.html", {"is_admin": False})
     else:
         return redirect(app_login)
-    
+
 def app_login(request):
     empty_form = forms.LoginForm()
     if request.method == "POST":
@@ -80,8 +86,7 @@ def app_login(request):
     else:
         return render(request, 'login.html', {'error': False, 'form': empty_form})
 
-
-
+# @decorators.login_required("/login/")
 def app_logout(request):
     if request.method == "POST":
         user = request.user
@@ -100,8 +105,30 @@ def app_logout(request):
     else:
         return redirect(home)
 
-
+# @decorators.login_required("/login/")
 def changeUser(request,userid):
+
+    current_user = request.user
+    if not current_user.is_authenticated:
+        return redirect(app_login)
+    idlist = [
+            'auth_token', 
+            'date_joined', 
+            'email', 
+            'first_name', 
+            'groups', 
+            'id',
+            'is_active', 
+            'is_staff', 
+            'is_superuser', 
+            'last_login', 
+            'last_name', 
+            'logentry', 
+            'password', 
+            'user_permissions', 
+            'username'
+        ]
+    implementdata = dict()
     if request.method == "GET":
         userinf = list(User.objects.filter(id=userid).values_list(
             'auth_token', 
@@ -119,62 +146,94 @@ def changeUser(request,userid):
             'password', 
             'user_permissions', 
             'username'))
-        return render(request,'user_manage.html',{"infos":userinf})
+        for i in range(len(idlist)): implementdata[idlist[i]]=userinf[0][i]
+        print(implementdata)
+        return render(request,'user_manage.html',{"infos":implementdata})
     if request.method == "POST":
-        userinfdict = {User.objects.filter(id=userid).values(
-            'auth_token', 
-            'date_joined', 
-            'email', 
-            'first_name', 
-            'groups', 
-            'id',
-            'is_active', 
-            'is_staff', 
-            'is_superuser', 
-            'last_login', 
-            'last_name', 
-            'logentry', 
-            'password', 
-            'user_permissions', 
-            'username')}
         updated_data = dict()
-        for column in User._meta.get_fields():
-            updated_data[column] = request.POST.get(f'{column}')
-        updated_data = json.dumps(updated_data)
-        user = UserSerializer()
-        user.update(user,userinfdict,updated_data)
+        for column in idlist: updated_data[column] = request.POST.get(f'{column}')
+        conn = sqlite3.connect('db.sqlite3')
+        cursor = conn.cursor()
+        for column in updated_data: cursor.execute(f"UPDATE auth_user SET {column}=\'{updated_data[column]}\' WHERE id = \'{request.user.id}\'")
+        cursor.close()
+        conn.commit()
         return HttpResponseRedirect('/')
 
+
+# @decorators.login_required("/login/")
 def addUser(request):
-    return render(request, "add_user.html")
+    current_user = request.user
+    if not current_user.is_authenticated:
+        return redirect(app_login)
     
-def addCargo(request):
+    if not current_user.is_superuser:
+        return render(request, 'add_user.html', {'error':3})
+
     if request.method == 'POST':
-        form = forms.Cargo(request.POST.pop('csrfmiddlewaretoken'))
-        try:
-            kwargs={'is_in_warehouse':{'on':True, 'off':False}[request.POST['is_in_warehouse']], 
-                'on_pellet':int(request.POST['on_pellet']), 
-                'destination':request.POST['destination'], 
-                'arrival_date': datetime(*[int(i) for i in request.POST['arrival_date'].split('/')][::-1] + [0,0,0,0]), 
-                'origin':request.POST['origin'],
-                'due_outbound_date':datetime(*[int(i) for i in request.POST['due_outbound_date'].split('/')][::-1] + [0,0,0,0]), 
-                'name':request.POST['name'],
-                'desc':request.POST['desc'],
-                'weight':int(request.POST['weight']),
-                'caregory':request.POST['category']}
-            models.Cargo(kwargs).save()
-            print(11)
+        form = forms.SignUpForm(request.POST)
+        # print(request.POST['is_superuser'].__class__)
         # if form.is_valid():
-            # Cargo(form.cleaned_data).save()
-            error = False
-        except :
+        #     User(**form.cleaned_data).save()
+        error = False
+        if request.POST['password1'] != request.POST['password2']:
             error = True
+        else:
+            password = hashers.make_password(request.POST['password1'])
+
+        if not error:
+            try:
+                User(username=request.POST['username'],
+                 password=password,
+                 first_name=request.POST['first_name'],
+                 last_name=request.POST['last_name'],
+                 email=request.POST['email'],
+                 is_superuser= {'True': True, 'False': False}[request.POST['is_superuser']],
+                 is_staff=True).save()
+            except:
+                error = True
+
+        return render(request, 'add_user.html', {'form': form, 'error':error})
+    else:
+        form = forms.SignUpForm()
+        return render(request, 'add_user.html', {'form': form, 'error':2})
+
+# @decorators.login_required("/login/")  
+def addCargo(request):
+
+    current_user = request.user
+    if not current_user.is_authenticated:
+        return redirect(app_login)
+
+    if request.method == 'POST':
+        form = forms.Cargo(request.POST)
+        if form.is_valid():
+            models.Cargo(**form.cleaned_data).save()
+            error = False
+        else: error = True
         return render(request, 'add_cargo.html', {'form': form, 'error':error})
     else:
         form = forms.Cargo()
         return render(request, 'add_cargo.html', {'form': form, 'error':2})
 
+# @decorators.login_required("/login/")  
 def changeCargo(request,cargoid):
+
+    current_user = request.user
+    if not current_user.is_authenticated:
+        return redirect(app_login)
+    implementdata = dict()
+    idlist = ['is_in_warehouse',
+            'on_pellet',
+            'destination',
+            'arrival_date',
+            'origin',
+            'due_outbound_date',
+            'name',
+            'id',
+            'desc',
+            'weight',
+            'category'
+        ]
     if request.method == "GET":
         cargoinf = list(Cargo.objects.filter(id=cargoid).values_list(
             'is_in_warehouse',
@@ -189,63 +248,103 @@ def changeCargo(request,cargoid):
             'weight',
             'category'
         ))
-        return render(request,'cargo_manage.html',{"infos":cargoinf})
+        for i in range(len(idlist)): implementdata[idlist[i]]=cargoinf[0][i]
+        return render(request,'cargo_manage.html',{"infos":implementdata})
     if request.method == "POST":
-        cargoinfdict = Cargo.objects.filter(id=cargoid).values(
-            'is_in_warehouse',
-            'on_pellet',
-            'destination',
-            'arrival_date',
-            'origin',
-            'due_outbound_date',
-            'name',
-            'id',
-            'desc',
-            'weight',
-            'category')
         updated_data = dict()
-        for column in Cargo._meta.get_fields():
-            updated_data[column] = request.POST.get(f'{column}')
-        updated_data = json.dumps(updated_data)
-        cargo = CargoSerializer()
-        cargo.update(cargo,cargoinfdict,updated_data)
+        for column in idlist:
+            if (column=="on_pellet" or column=="category"):updated_data[column+"_id"] = request.POST.get(f'{column}')
+            else:updated_data[column] = request.POST.get(f'{column}')
+        conn = sqlite3.connect('db.sqlite3')
+        cursor = conn.cursor()
+        id = updated_data['id']
+        for column in updated_data:
+            print(column)
+            print(updated_data[column])
+            cursor.execute(f"UPDATE AssetMgr_Cargo SET {column}=\'{updated_data[column]}\' WHERE id = \'{id}\'")
+        cursor.close()
+        conn.commit()
         return HttpResponseRedirect('/')
         
     
 
+# @decorators.login_required("/login/")
 def search(request):
+
+    current_user = request.user
+    if not current_user.is_authenticated:
+        return redirect(app_login)
+
     try:
         query_string = request.GET['query_string']
     except KeyError:
         query_string = ''
 
-    # try:
-    #     search_type = request.GET['type']
-    # except KeyError:
-    #     search_type = 'name'
-    search_type = 'name'
+    try:
+        search_type = request.GET['type']
+    except KeyError:
+        search_type = None
+
+    form = forms.SearchForm()
+
+    if not search_type:
+        return render(request, 'search.html', {'form': form, 'found': True})
+
     query_string = query_string.strip()
     query_string = '.*' + query_string + '.*'
     if query_string == '':
-        return render(request, 'search.html', {"queryset": None})
+        return render(request, 'search.html', {'found': False})
 
     if search_type == 'name':
         queryset = models.Cargo.objects.filter(name__regex=query_string)
-        return render(request, 'search.html', {"queryset": queryset})
+        return render(request, 'search.html', {"queryset": queryset, 'found': True})
+    if search_type == 'id':
+        queryset = models.Cargo.objects.filter(id__regex=query_string)
+        return render(request, 'search.html', {"queryset": queryset, 'found': True})
+    if search_type == 'destination':
+        queryset = models.Cargo.objects.filter(destination__regex=query_string)
+        return render(request, 'search.html', {"queryset": queryset, 'found': True})
+    if search_type == 'desc':
+        queryset = models.Cargo.objects.filter(desc__regex=query_string)
+        return render(request, 'search.html', {"queryset": queryset, 'found': True})
+    return render(request, 'search.html', {'found': True, 'form':form})
 
+# @decorators.login_required("/login/")
 def inventoryReport(request):
+
+    current_user = request.user
+    if not current_user.is_authenticated:
+        return redirect(app_login)
+
     cargo_set = models.Cargo.objects.all()
     if request.method == "POST":
-        filename = str(datetime.now()).replace(" ", "_")
+        filename = 'inventory_report-' + str(datetime.now()).replace(" ", "_")
         df = pandas.DataFrame.from_records(cargo_set.values())
         response = HttpResponse(df.to_csv())
         response.headers['Content-Type'] = 'application/csv'
-        response.headers['Content-Disposition'] = f'attachment; filename="{filename}"'
+        response.headers['Content-Disposition'] = f'attachment; filename="{filename}.csv"'
+        return response
     else:
-        pass
+        return HttpResponse('Method not allowed!')
 
+# @decorators.login_required("/login/")
 def userReport(request):
-    pass
+
+    current_user = request.user
+    if not current_user.is_authenticated:
+        return redirect(app_login)
+
+    user_set = User.objects.all()
+    if request.method == "POST":
+        filename = 'user_report-' + str(datetime.now()).replace(" ", "_")
+        df = pandas.DataFrame.from_records(user_set.values())
+        response = HttpResponse(df.to_csv())
+        response.headers['Content-Type'] = 'application/csv'
+        response.headers['Content-Disposition'] = f'attachment; filename="{filename}.csv"'
+        return response
+    else:
+        return HttpResponse('Method not allowed!')
+
 
 
 # end of Django web application views

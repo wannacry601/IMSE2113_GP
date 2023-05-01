@@ -24,6 +24,7 @@ urlpatterns = [
     path('api/everything', AllDataViewSet.as_view({'get':'list'})),
     path('api-auth/', include('rest_framework.urls', namespace='rest_framework')),
     path('how/', views.how, name='how'),
+    path('index/', views.index, name='index'),
     path('about/', views.about, name='about'),
     path('login/', views.app_login, name='login_'),
     path('logout/', views.app_logout, name='logout_'), 
@@ -32,7 +33,10 @@ urlpatterns = [
     path('addUser/', views.addUser, name='addUser'),
     path('addCargo/', views.addCargo, name='addCargo'),
     path('search/', views.search, name='search'),
-    path("cargo/<cargoid>",views.changeCargo,name="changeCargo")
+    path("cargo/<cargoid>",views.changeCargo,name="changeCargo"),
+    path("InventoryReport/", views.inventoryReport, name="inventoryReport"),
+    path("UserReport/", views.userReport, name="userReport"),
+
 
 ]
 

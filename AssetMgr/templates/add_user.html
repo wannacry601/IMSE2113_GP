@@ -1,0 +1,80 @@
+{% extends 'layout.html' %}
+
+{% block navbar %}
+<li class="nav-item">
+    <a class="nav-link" href="../index/">Home <span class="sr-only">(current)</span></a>
+  </li>
+  <li class="nav-item">
+    <a class="nav-link" href="../about/"> About </a>
+  </li>
+  <li class="nav-item">
+    <a class="nav-link" href="../how/"> Usage </a>
+  </li>
+  
+{% endblock %}
+
+{% block style%}
+<style>
+    th, table, td {
+    	font-size:16px;
+    	margin:auto;
+		font-family: 'times new roman';
+		border-collapse: collapse;
+    	color:rgb(12, 108, 76);
+    	text-align: center;
+    	border:1px solid black;
+    	width:600px;
+        height: 30px; 
+   		margin:10;
+        background-color: aliceblue;
+	}
+
+</style>
+{% endblock %}
+
+{% block content %}
+
+{% if error == 0 %}
+<p>Add user successful!</p>
+{% endif %}
+
+{% if error == 1 %}
+<p>Add new user failed, please try again</p>
+{% else %}
+  {% if error == 2 %}
+  <p>Please enter user information</p>
+  {% endif %}
+{% endif %}
+
+{% if error == 3 %}
+<p>You do not have permission to create a user</p>
+{% endif %}
+
+{% if form %}
+<!-- <form action="." method="POST" class="upload">
+    {% csrf_token %}
+
+    {{ form.as_p }}
+    <input type="submit" class="submit" value="Submit">
+</form> -->
+
+<form action="" method="POST">
+  <table class="table">
+  <tbody>
+  {% csrf_token %}
+  {% for field in form %}
+      <tr><td><label class="add-user" for="{{ field.auto_id }}">{{ field.label }}</label></td>
+      <td>{{ field }}</td>        </tr>
+
+  {% endfor %}
+  <tr><td><label class="submit" id="submit" for="submit">Submit</label></td>
+      <td><input type="submit" value="Submit" id="submit"></td></tr>
+
+  </tbody>
+</table>
+</form>
+
+
+{% endif %}
+
+{% endblock %}

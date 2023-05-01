@@ -1,19 +1,32 @@
-<!DOCTYPE HTML>
-<html>
-    {% extends 'layout.html' %}
+{% extends 'layout.html' %}
+
+    {% block navbar %}
+    <li class="nav-item">
+        <a class="nav-link" href="../index/">Home <span class="sr-only">(current)</span></a>
+    </li>
+    <li class="nav-item">
+        <a class="nav-link" href="../about/"> About </a>
+    </li>
+    <li class="nav-item">
+        <a class="nav-link" href="../how/"> Usage </a>
+    </li>
+    {% endblock %}
+
+
+    
     {% block title%}User Management{% endblock %}
-    {% block contents %}
+    {% block content %}
     {% if infos %}
     <form method="POST" action="">
     {% csrf_token %}
-    {% for info in infos %}
-    <label>{{ info.id }}</label>
-    <input type="text" value={{ info }} id="{{ info.id }}"/>
+    <!--infos from one cargo row-->
+    {% for key,value in infos.items %}
+    <label>{{ key }}: </label>
+    <input type="text" value="{{ value }}" name="{{ key }}"/><br>
     {% endfor %}
     <button type="submit">SAVE</button>
     </form>
     {% else %}
     <a>No user information. Check if ID right.</a>
     {% endif %}
-    {% endblock contents %}
-</html>
+    {% endblock %}

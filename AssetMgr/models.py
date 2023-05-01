@@ -39,7 +39,7 @@ class Order(models.Model):
         return f"Order {self.id} for {self.quantity} {self.order_type} to {self.destination} is due on {self.due_date}."
 
 class Products(models.Model):
-    name = models.CharField(max_length=20)
+    name = models.CharField(max_length=20, unique=True)
     description = models.CharField(max_length=200)
     def __str__(self) -> str:
         return f"Produce {self.id} is {self.name}."

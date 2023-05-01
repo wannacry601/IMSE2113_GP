@@ -8,15 +8,65 @@
     <a class="nav-link" href="../about/"> About </a>
   </li>
   <li class="nav-item">
-    <a class="nav-link" href="../how/"> How </a>
+    <a class="nav-link" href="../how/"> Usage </a>
   </li>
   
 {% endblock %}
 
+{% block style%}
+<style>
+    th, table, td {
+    	font-size:16px;
+    	margin:auto;
+		font-family: 'times new roman';
+		border-collapse: collapse;
+    	color:rgb(12, 108, 76);
+    	text-align: center;
+    	border:1px solid black;
+    	width:600px;
+        height: 30px; 
+   		margin:10;
+        background-color: aliceblue;
+	}
+
+</style>
+{% endblock %}
+
 {% block content %}
-{% if form %}
+<div class="main-content">
+    {% if form %}
+    <form action="." method="GET", class="upload">
+        {% csrf_token %}
+    
+        {{ form.as_p }}
+        <input type="submit" class="submit" value="Submit">
+    </form>
+        {% endif %}
 
-{{ form.as_p }}
+    {% if queryset %}
 
-{% endif %}
+    <table>
+        <thead>
+            <tr>
+                <th class="id">id</th>
+                <th class="name">name</th>
+                <th class="destination">destination</th>
+                <th class="desc">description</th>
+            </tr>
+        </thead>
+        {% for cargo in queryset %}
+        <tr>
+            <td><a href="../cargo/{{ cargo.id }}">{{ cargo.id }}</a></td>
+            <td>{{ cargo.name }}</td>
+            <td>{{ cargo.destination }}</td>
+            <td>{{ cargo.desc }}</td>
+        </tr>
+        {% endfor %}
+    </table>
+    {% endif %}
+
+    {% if not found or not queryset %}
+        <p>Nothing Found, try something else</p>
+    {% endif %}
+</div>
 {% endblock %}

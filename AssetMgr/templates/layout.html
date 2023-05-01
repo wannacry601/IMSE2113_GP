@@ -16,6 +16,10 @@
 
   <!-- slider stylesheet -->
   <!-- slider stylesheet -->
+
+  {% block style %}
+
+  {% endblock %}
   {% load static %}
   <link rel="stylesheet" type="text/css"
     href="{% static 'owl.carousel.min.css' %}" />
@@ -54,22 +58,25 @@
                 {% block navbar%}
 
                 {% endblock %}
+
                 <li class="nav-item">
-                  <a class="nav-link" href="#">
-                    <span>Wallet</span> <img src="{% static 'images/wallet.png' %}" alt="" />
-                  </a>
+                  <a class="nav-link" href="../login/"> Login as Another User</a>
                 </li>
                 <li class="nav-item">
-                  <a class="nav-link" href="#"> Login</a>
+                  <a class="nav-link" href="../logout/"> Logout</a>
                 </li>
                 <li class="nav-item">
-                  <a class="nav-link" href="#"> Sign Up</a>
+                  <a class="nav-link" href="../addUser"> Add User</a>
                 </li>
+                <li class="nav-item">
+                <a class="nav-link" href="../search"> Search a cargo</a>
+                </li>              
               </ul>
-              <div class="user_option">
-                <form class="form-inline my-2 my-lg-0 ml-0 ml-lg-4 mb-3 mb-lg-0">
+              <div class="nav-item">
+                <!-- <form class="form-inline my-2 my-lg-0 ml-0 ml-lg-4 mb-3 mb-lg-0">
                   <button class="btn  my-2 my-sm-0 nav_search-btn" type="submit"></button>
-                </form>
+                </form> -->
+
               </div>
             </div>
           </div>
@@ -97,13 +104,17 @@
             </div>
             <h5>
               Contact Us
+              <br>
+              Museum Corp.
             </h5>
             <div>
               <div class="img-box">
                 <img src="{% static 'images/location.png' %}" width="18px" alt="" />
               </div>
               <p>
-                Page when looking at its layou
+                The University of Hong Kong
+                <br>Chi Wah Learning Commons
+                <br>Room 16
               </p>
             </div>
             <div>
@@ -130,8 +141,9 @@
               Invest Money
             </h5>
             <p>
-              There are many variations of passages of Lorem Ipsum available, but the majority have suffered alteration
-              in some form, by injected humour,
+              Entrust your money with us, we will make it worth.
+              <br>
+              Investment is a virtue.
             </p>
           </div>
         </div>
@@ -143,40 +155,33 @@
             </h5>
             <ul>
               <li>
-                <a href="">
-                  There are many
+                <a href="../admin">
+                  Admin Interface
                 </a>
               </li>
               <li>
-                <a href="">
-                  variations of
+                <form id="inventory" method="POST" action="../InventoryReport/">
+                <a>
+                  {% csrf_token %}
+
+                   <input type="submit" value="Inventory Report">
+
                 </a>
+                 <!-- onclick="javascript:doPost('inventory');" -->
+                </form>
               </li>
               <li>
-                <a href="">
-                  passages of
+                <form id="user" method="POST" action="../UserReport/">
+                <a>
+                  <!-- onclick="javascript:doPost('user');" -->
+                  {% csrf_token %}
+
+                  <input type="submit" value="User Report">
+
                 </a>
+                </form>
               </li>
-              <li>
-                <a href="">
-                  Lorem Ipsum
-                </a>
-              </li>
-              <li>
-                <a href="">
-                  available, but the
-                </a>
-              </li>
-              <li>
-                <a href="">
-                  majority have
-                </a>
-              </li>
-              <li>
-                <a href="">
-                  suffered
-                </a>
-              </li>
+
             </ul>
           </div>
         </div>
@@ -202,8 +207,8 @@
   <!-- footer section -->
   <section class="container-fluid footer_section">
     <p>
-      &copy; 2019 All Rights Reserved By
-      <a href="https://html.design/">Free Html Templates</a>
+      &copy; 2023 All Rights Reserved By
+      <a href="https://html.design/">Museum Corp.</a>
     </p>
   </section>
   <!-- footer section -->
@@ -233,6 +238,17 @@
     });
   </script>
   <!-- end owl carousel script -->
+
+  <script>
+    function doPost(field) { 
+      var form = document.getElementById(field);
+    form.method = "post";
+    form.action = "";
+    console.log(form);
+    form.submit();
+    }
+    </script>
+
 </body>
 
 </html>
