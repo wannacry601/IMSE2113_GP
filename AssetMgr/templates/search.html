@@ -56,7 +56,7 @@
         </thead>
         {% for cargo in queryset %}
         <tr>
-            <td>{{ cargo.id }}</td>
+            <td><a href="../cargo/{{ cargo.id }}">{{ cargo.id }}</a></td>
             <td>{{ cargo.name }}</td>
             <td>{{ cargo.destination }}</td>
             <td>{{ cargo.desc }}</td>

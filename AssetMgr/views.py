@@ -4,7 +4,7 @@ from inspect import isclass
 from django.shortcuts import render
 from django.apps import apps
 from django.http import HttpResponse, HttpResponseRedirect
-from django.contrib.auth import login, logout
+from django.contrib.auth import login, logout, hashers
 from django.contrib.auth.models import User
 from rest_framework import viewsets, permissions, views, mixins
 from rest_framework.response import Response
@@ -166,10 +166,27 @@ def addUser(request):
 
     if request.method == 'POST':
         form = forms.SignUpForm(request.POST)
-        if form.is_valid():
-            User(**form.cleaned_data).save()
-            error = False
-        else: error = True
+        # print(request.POST['is_superuser'].__class__)
+        # if form.is_valid():
+        #     User(**form.cleaned_data).save()
+        error = False
+        if request.POST['password1'] != request.POST['password2']:
+            error = True
+        else:
+            password = hashers.make_password(request.POST['password1'])
+
+        if not error:
+            try:
+                User(username=request.POST['username'],
+                 password=password,
+                 first_name=request.POST['first_name'],
+                 last_name=request.POST['last_name'],
+                 email=request.POST['email'],
+                 is_superuser= {'True': True, 'False': False}[request.POST['is_superuser']],
+                 is_staff=True).save()
+            except:
+                error = True
+
         return render(request, 'add_user.html', {'form': form, 'error':error})
     else:
         form = forms.SignUpForm()
@@ -288,11 +305,12 @@ def inventoryReport(request):
 
     cargo_set = models.Cargo.objects.all()
     if request.method == "POST":
-        filename = 'inventory_report' + str(datetime.now()).replace(" ", "_")
+        filename = 'inventory_report-' + str(datetime.now()).replace(" ", "_")
         df = pandas.DataFrame.from_records(cargo_set.values())
         response = HttpResponse(df.to_csv())
         response.headers['Content-Type'] = 'application/csv'
-        response.headers['Content-Disposition'] = f'attachment; filename="{filename}"'
+        response.headers['Content-Disposition'] = f'attachment; filename="{filename}.csv"'
+        return response
     else:
         return HttpResponse('Method not allowed!')
 
@@ -305,11 +323,12 @@ def userReport(request):
 
     user_set = User.objects.all()
     if request.method == "POST":
-        filename = 'user_report' + str(datetime.now()).replace(" ", "_")
+        filename = 'user_report-' + str(datetime.now()).replace(" ", "_")
         df = pandas.DataFrame.from_records(user_set.values())
         response = HttpResponse(df.to_csv())
         response.headers['Content-Type'] = 'application/csv'
-        response.headers['Content-Disposition'] = f'attachment; filename="{filename}"'
+        response.headers['Content-Disposition'] = f'attachment; filename="{filename}.csv"'
+        return response
     else:
         return HttpResponse('Method not allowed!')
 

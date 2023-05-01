@@ -1,5 +1,5 @@
-<!DOCTYPE HTML>
-<html>
+    {% extends 'layout.html' %}
+
 
 {% block navbar %}
 <li class="nav-item">
@@ -14,22 +14,29 @@
   
 {% endblock %}
     
+{% block style %}
+<style>
+    .input {
+      width:90%;
+    } 
 
+</style>
 
-    {% extends 'layout.html' %}
-    {% block title%}Cargo Management{% endblock %}
-    {% block contents %}
+{% endblock %}
+
+{% block title%}Cargo Management{% endblock %}
+
+    {% block content %}
     {% if infos %}
     <form method="POST" action="">
     {% csrf_token %}
     {% for info in infos %}<!--infos from one cargo row-->
     <label>{{ info.id }}</label>
-    <input type="text" value="{{ info }}" id="{{ info.id }}"/>
+    <input type="text" value="{{ info }}" class="input" id="{{ info.id }}"/>
     {% endfor %}
     <button type="submit">SAVE</button>
     </form>
     {% else %}
     <a>No item information. Check if ID right.</a>
     {% endif %}
-    {% endblock contents %}
-</html>
+    {% endblock content %}

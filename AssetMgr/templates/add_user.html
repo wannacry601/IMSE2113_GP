@@ -34,6 +34,10 @@
 
 {% block content %}
 
+{% if error == 0 %}
+<p>Add user successful!</p>
+{% endif %}
+
 {% if error == 1 %}
 <p>Add new user failed, please try again</p>
 {% else %}

@@ -1,5 +1,5 @@
-<!DOCTYPE HTML>
-<html>
+    {% extends 'layout.html' %}
+
     {% block navbar %}
     <li class="nav-item">
         <a class="nav-link" href="../index/">Home <span class="sr-only">(current)</span></a>
@@ -13,7 +13,6 @@
     {% endblock %}
 
 
-    {% extends 'layout.html' %}
     {% block title%}User Management{% endblock %}
     {% block contents %}
     {% if infos %}
@@ -29,4 +28,3 @@
     <a>No user information. Check if ID right.</a>
     {% endif %}
     {% endblock contents %}
-</html>
