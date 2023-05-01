@@ -1,0 +1,19 @@
+<!DOCTYPE HTML>
+<html>
+    {% extends 'layout.html' %}
+    {% block title%}Cargo Management{% endblock %}
+    {% block contents %}
+    {% if infos %}
+    <form method="POST" action="">
+    {% csrf_token %}
+    {% for info in infos %}<!--infos from one cargo row-->
+    <label>{{ info.id }}</label>
+    <input type="text" value={{ info }} id="{{ info.id }}"/>
+    {% endfor %}
+    <button type="submit">SAVE</button>
+    </form>
+    {% else %}
+    <a>No item information. Check if ID right.</a>
+    {% endif %}
+    {% endblock contents %}
+</html>
