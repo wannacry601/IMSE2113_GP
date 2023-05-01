@@ -112,10 +112,40 @@ def changeUser(request,userid):
         return redirect(app_login)
 
     if request.method == "GET":
-        userinf = list(User.objects.filter(id=userid).values_list('*'))
+        userinf = list(User.objects.filter(id=userid).values_list(
+            'auth_token', 
+            'date_joined', 
+            'email', 
+            'first_name', 
+            'groups', 
+            'id',
+            'is_active', 
+            'is_staff', 
+            'is_superuser', 
+            'last_login', 
+            'last_name', 
+            'logentry', 
+            'password', 
+            'user_permissions', 
+            'username'))
         return render(request,'user_manage.html',{"infos":userinf})
     if request.method == "POST":
-        userinfdict = User.objects.filter(id=userid).values('*')
+        userinfdict = {User.objects.filter(id=userid).values(
+            'auth_token', 
+            'date_joined', 
+            'email', 
+            'first_name', 
+            'groups', 
+            'id',
+            'is_active', 
+            'is_staff', 
+            'is_superuser', 
+            'last_login', 
+            'last_name', 
+            'logentry', 
+            'password', 
+            'user_permissions', 
+            'username')}
         updated_data = dict()
         for column in User._meta.get_fields():
             updated_data[column] = request.POST.get(f'{column}')
@@ -171,10 +201,33 @@ def changeCargo(request,cargoid):
         return redirect(app_login)
 
     if request.method == "GET":
-        cargoinf = list(Cargo.objects.filter(id=cargoid).values_list('*'))
+        cargoinf = list(Cargo.objects.filter(id=cargoid).values_list(
+            'is_in_warehouse',
+            'on_pellet',
+            'destination',
+            'arrival_date',
+            'origin',
+            'due_outbound_date',
+            'name',
+            'id',
+            'desc',
+            'weight',
+            'category'
+        ))
         return render(request,'cargo_manage.html',{"infos":cargoinf})
     if request.method == "POST":
-        cargoinfdict = Cargo.objects.filter(id=cargoid).values('*')
+        cargoinfdict = Cargo.objects.filter(id=cargoid).values(
+            'is_in_warehouse',
+            'on_pellet',
+            'destination',
+            'arrival_date',
+            'origin',
+            'due_outbound_date',
+            'name',
+            'id',
+            'desc',
+            'weight',
+            'category')
         updated_data = dict()
         for column in Cargo._meta.get_fields():
             updated_data[column] = request.POST.get(f'{column}')
