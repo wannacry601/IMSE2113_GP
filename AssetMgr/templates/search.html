@@ -13,20 +13,60 @@
   
 {% endblock %}
 
-{% block content %}
+{% block style%}
+<style>
+    th, table, td {
+    	font-size:16px;
+    	margin:auto;
+		font-family: 'times new roman';
+		border-collapse: collapse;
+    	color:rgb(12, 108, 76);
+    	text-align: center;
+    	border:1px solid black;
+    	width:600px;
+        height: 30px; 
+   		margin:10;
+        background-color: aliceblue;
+	}
 
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="main-content">
     {% if form %}
+    <form action="." method="GET", class="upload">
+        {% csrf_token %}
+    
         {{ form.as_p }}
-    {% endif %}
+        <input type="submit" class="submit" value="Submit">
+    </form>
+        {% endif %}
 
     {% if queryset %}
-        {% for cargo in queryset %}
-            cargo.id
-            cargo.name
-            cargo.destination
-            cargo.desc
 
+    <table>
+        <thead>
+            <tr>
+                <th class="id">id</th>
+                <th class="name">name</th>
+                <th class="destination">destination</th>
+                <th class="desc">description</th>
+            </tr>
+        </thead>
+        {% for cargo in queryset %}
+        <tr>
+            <td>{{ cargo.id }}</td>
+            <td>{{ cargo.name }}</td>
+            <td>{{ cargo.destination }}</td>
+            <td>{{ cargo.desc }}</td>
+        </tr>
         {% endfor %}
+    </table>
     {% endif %}
 
+    {% if not found or not queryset %}
+        <p>Nothing Found, try something else</p>
+    {% endif %}
+</div>
 {% endblock %}

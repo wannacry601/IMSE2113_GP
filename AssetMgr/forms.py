@@ -53,5 +53,5 @@ class Cargo(forms.Form):
     #               'category',)
 
 class SearchForm(forms.Form):
-    type = forms.ChoiceField(choices=(('id', 'id'), ('name', 'name'), ('destination', 'destination'), ('desc', 'desc'))) # extension: search by date
+    type = forms.ChoiceField(required=True, choices=(('id', 'id'), ('name', 'name'), ('destination', 'destination'), ('desc', 'description'))) # extension: search by date
     query_string = forms.CharField(max_length=32)

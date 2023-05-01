@@ -11,6 +11,7 @@ from rest_framework.renderers import JSONRenderer
 from django.utils.timezone import datetime
 from .serializers import *
 from . import models, forms
+from django.contrib.auth import decorators
 from django.contrib.auth import login, logout
 import pandas
 
@@ -20,7 +21,7 @@ debug = True #Turn false when in production
 
 
 # home = lambda request: render(request, 'blank.html')
-
+@decorators.login_required
 def index(request):
     user = request.user
     if user.is_authenticated:
@@ -32,6 +33,7 @@ def index(request):
 
 home = index
 
+@decorators.login_required
 def how(request):
     user = request.user
     if user.is_authenticated:
@@ -41,6 +43,7 @@ def how(request):
     else:
         return redirect(app_login)
 
+@decorators.login_required
 def about(request):
     user = request.user
     if user.is_authenticated:
@@ -49,7 +52,8 @@ def about(request):
         return render(request, "about.html", {"is_admin": False})
     else:
         return redirect(app_login)
-    
+
+@decorators.login_required
 def app_login(request):
     empty_form = forms.LoginForm()
     if request.method == "POST":
@@ -79,8 +83,7 @@ def app_login(request):
     else:
         return render(request, 'login.html', {'error': False, 'form': empty_form})
 
-
-
+@decorators.login_required
 def app_logout(request):
     if request.method == "POST":
         user = request.user
@@ -99,13 +102,15 @@ def app_logout(request):
     else:
         return redirect(home)
 
-
+@decorators.login_required
 def changeUser(request):
     pass
 
+@decorators.login_required
 def addUser(request):
     return render(request, "add_user.html")
-    
+
+@decorators.login_required  
 def addCargo(request):
     if request.method == 'POST':
         form = forms.Cargo(request.POST)
@@ -118,9 +123,11 @@ def addCargo(request):
         form = forms.Cargo()
         return render(request, 'add_cargo.html', {'form': form, 'error':2})
 
+@decorators.login_required
 def changeCargo(request):
     pass
 
+@decorators.login_required
 def search(request):
     try:
         query_string = request.GET['query_string']
@@ -131,20 +138,32 @@ def search(request):
         search_type = request.GET['type']
     except KeyError:
         search_type = None
-    
+
+    form = forms.SearchForm()
+
     if not search_type:
-        form = forms.SearchForm()
-        return render(request, 'search.html', {'form': form})
+        return render(request, 'search.html', {'form': form, 'found': True})
 
     query_string = query_string.strip()
     query_string = '.*' + query_string + '.*'
     if query_string == '':
-        return render(request, 'search.html', {"queryset": None})
+        return render(request, 'search.html', {'found': False})
 
     if search_type == 'name':
         queryset = models.Cargo.objects.filter(name__regex=query_string)
-        return render(request, 'search.html', {"queryset": queryset})
+        return render(request, 'search.html', {"queryset": queryset, 'found': True})
+    if search_type == 'id':
+        queryset = models.Cargo.objects.filter(id__regex=query_string)
+        return render(request, 'search.html', {"queryset": queryset, 'found': True})
+    if search_type == 'destination':
+        queryset = models.Cargo.objects.filter(destination__regex=query_string)
+        return render(request, 'search.html', {"queryset": queryset, 'found': True})
+    if search_type == 'desc':
+        queryset = models.Cargo.objects.filter(desc__regex=query_string)
+        return render(request, 'search.html', {"queryset": queryset, 'found': True})
+    return render(request, 'search.html', {'found': True, 'form':form})
 
+@decorators.login_required
 def inventoryReport(request):
     cargo_set = models.Cargo.objects.all()
     if request.method == "POST":
@@ -156,6 +175,7 @@ def inventoryReport(request):
     else:
         return HttpResponse('Method not allowed!')
 
+@decorators.login_required
 def userReport(request):
     user_set = User.objects.all()
     if request.method == "POST":
